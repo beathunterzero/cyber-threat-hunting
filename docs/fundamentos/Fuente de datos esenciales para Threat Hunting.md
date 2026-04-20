@@ -91,5 +91,4 @@ Fuente de verdad irrefutable. Si el atacante compromete el endpoint, la comunica
 
 ### Documentación Relacionada
 
-[[Introducción al Threat Hunting]]
-[[Tipos de Threat Hunting]]
+[[Filosofía y estrategia del Threat Hunting]]
