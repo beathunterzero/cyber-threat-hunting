@@ -109,3 +109,4 @@ Para entender el valor del Hunter en el SOC, es crucial contrastar el enfoque re
 [[Hipótesis y casos de usos comunes]]
 [[Dataset de ataque simulado (logs y malware samples controlados)]]
 [[Preparación del entorno de Hunting]]
+[[Técnicas de persistencia y ejecución en endpoints]]
