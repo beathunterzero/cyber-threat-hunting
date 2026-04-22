@@ -64,6 +64,6 @@ Para priorizar la búsqueda, clasificamos los indicadores según el esfuerzo que
 
 ### Documentación Relacionada
 
-[[Filosofía y estrategia del Threat Hunting]]
-[[Threat Hunting basado en Hipótesis (Hypothesis-Driven)]]
-[[Threat Hunting basado en Analítica (Analytics-Driven)]]
+[[01 - Filosofía y estrategia del Threat Hunting]]
+[[05 - Threat Hunting basado en Hipótesis (Hypothesis-Driven)]]
+[[06 - Threat Hunting basado en Analítica (Analytics-Driven)]]

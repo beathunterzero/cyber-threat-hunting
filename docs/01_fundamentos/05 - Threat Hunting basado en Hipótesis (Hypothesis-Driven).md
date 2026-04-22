@@ -74,6 +74,6 @@ Para que el hunting basado en hipótesis sea viable, el laboratorio debe contar 
 
 ### Documentación Relacionada
 
-[[Filosofía y estrategia del Threat Hunting]]
-[[Threat Hunting basado en IoCs (IoC-Driven)]]
-[[Threat Hunting basado en Analítica (Analytics-Driven)]]
+[[01 - Filosofía y estrategia del Threat Hunting]]
+[[04 - Threat Hunting basado en IoCs (IoC-Driven)]]
+[[06 - Threat Hunting basado en Analítica (Analytics-Driven)]]

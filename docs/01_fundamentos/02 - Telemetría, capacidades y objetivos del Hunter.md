@@ -76,6 +76,4 @@ El éxito de una jornada de hunting no se mide solo por encontrar incidentes, si
     
 
 ### Documentación Relacionada
-
-[[Filosofía y estrategia del Threat Hunting]]
-[[Fuente de datos esenciales para Threat Hunting]]
+[[01 - Filosofía y estrategia del Threat Hunting]]

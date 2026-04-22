@@ -43,5 +43,11 @@ Para detectar estas técnicas en tu entorno de **Elastic Security** y **Velocira
 
 ### Documentación Relacionada
 
-[[Threat Hunting basado en IoCs (IoC-Driven)]]
-[[Filosofía y estrategia del Threat Hunting]]
+[[02 - Procesos sospechosos, inyección de código, LOLBAS]]
+[[03 - Técnicas de descubrimiento y movimiento lateral]]
+[[04 - Identificación de intentos de RDP, SMB y PASS-THE-HASH]]
+[[05 - Cazando anomalías en privilegios]]
+[[06 - Queries y hunting en EDR]]
+[[07 - Cómo formular búsquedas efectivas]]
+[[08 - Casos de ransomware, Cobalt Strike y keyloggers]]
+[[01 - Filosofía y estrategia del Threat Hunting]]

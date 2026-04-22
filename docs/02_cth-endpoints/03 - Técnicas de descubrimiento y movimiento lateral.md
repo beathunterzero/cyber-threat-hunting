@@ -48,5 +48,4 @@ Para ejecutar el Nivel 2 de la pirámide, los atacantes suelen utilizar herramie
 
 ### Documentación Relacionada
 
-[[Procesos sospechosos, inyección de código, LOLBAS]]
-[[Técnicas de persistencia y ejecución en endpoints]]
+[[01 - Técnicas de persistencia y ejecución en endpoints]]

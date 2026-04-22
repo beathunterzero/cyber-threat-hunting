@@ -102,6 +102,6 @@ DeviceNetworkEvents
 
 ### Documentación Relacionada
 
-[[Filosofía y estrategia del Threat Hunting]]
-[[MITRE ATT&CK como guía de CTH]]
-[[Cyber Kill Chain como guía de CTH]]
+[[01 - Filosofía y estrategia del Threat Hunting]]
+[[07 - MITRE ATT&CK como guía de CTH]]
+[[08 - Cyber Kill Chain como guía de CTH]]

@@ -75,4 +75,4 @@ Debido a su integración profunda con el sistema, PowerShell requiere atención 
 
 ### Documentación Relacionada
 
-[[Técnicas de persistencia y ejecución en endpoints]]
+[[01 - Técnicas de persistencia y ejecución en endpoints]]

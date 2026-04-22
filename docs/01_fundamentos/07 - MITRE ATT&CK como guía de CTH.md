@@ -78,6 +78,6 @@ La adopción de MITRE ATT&CK garantiza que el hunting sea:
 
 ### Documentación Relacionada
 
-[[Filosofía y estrategia del Threat Hunting]]
-[[Cyber Kill Chain como guía de CTH]]
-[[Modelo Diamante como guía de CTH]]
+[[01 - Filosofía y estrategia del Threat Hunting]]
+[[08 - Cyber Kill Chain como guía de CTH]]
+[[09 - Modelo Diamante como guía de CTH]]

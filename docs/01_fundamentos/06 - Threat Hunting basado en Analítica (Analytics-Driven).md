@@ -63,6 +63,6 @@ La Inteligencia de Amenazas (CTI) potencia la analítica al proporcionar el cont
 
 ### Documentación Relacionada
 
-[[Filosofía y estrategia del Threat Hunting]]
-[[Threat Hunting basado en IoCs (IoC-Driven)]]
-[[Threat Hunting basado en Hipótesis (Hypothesis-Driven)]]
+[[01 - Filosofía y estrategia del Threat Hunting]]
+[[04 - Threat Hunting basado en IoCs (IoC-Driven)]]
+[[05 - Threat Hunting basado en Hipótesis (Hypothesis-Driven)]]

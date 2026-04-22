@@ -108,59 +108,7 @@ Para el análisis profundo y la creación de reglas en el SIEM, es fundamental n
 |**ParentProcessId**|Identificador del proceso padre para rastrear el origen de la ejecución.|
 |**RemoteIP / Port**|Dirección de origen y puerto de destino (ej. 445 para SMB, 3389 para RDP).|
 |**AuthenticationPackage**|Protocolo utilizado (NTLM vs Kerberos).|
-
-> [!abstract]- 🕵️‍♂️ Técnica 1: RDP (Remote Desktop Protocol)
-> **Vector:** Conexión Remota Anómala
-> **Campos Críticos:** `EventID 4624`, `LogonType 10`
-> 
-> **Indicadores de Alerta:**
-> - Nuevas conexiones desde hosts anómalos o Internet.
-> - Múltiples intentos fallidos seguidos de éxito (Brute Force).
-> 
-> **Query KQL:**
-> ```kql
-> SecurityEvent
-> | where EventID == 4624
-> | where LogonType == 10
-> | where AccountType != "Machine" 
-> | where TimeGenerated between (ago(7d) .. now())
-> | summarize count() by Account, Computer, bin(TimeGenerated, 1h)
-> | where count_ > 3
-> ```
-
-> [!warning]- 📂 Técnica 2: SMB / PsExec
-> **Vector:** Transferencia de archivos y ejecución remota
-> **Campos Críticos:** `Puerto TCP 445`, `ProcessCommandLine`
-> 
-> **Indicadores de Alerta:**
-> - Transferencias inusuales hacia `\\share`.
-> - Conexiones masivas a múltiples hosts en poco tiempo.
-> 
-> **Query KQL:**
-> ```kql
-> DeviceNetworkEvents
-> | where RemotePort == 445
-> | summarize connections = count() by DeviceId, RemoteIP, bin(TimeGenerated, 1h)
-> | where connections > 10
-> ```
-
-> [!danger]- 🔑 Técnica 3: Pass-the-Hash (PtH)
-> **Vector:** Reutilización de credenciales robadas
-> **Campos Críticos:** `AuthenticationPackage NTLM`, `EventID 4776 / 4624`
-> 
-> **Indicadores de Alerta:**
-> - Autenticaciones NTLM inusuales entre hosts.
-> - Misma cuenta privilegiada saltando entre múltiples hosts rápidamente.
-> 
-> **Query KQL:**
-> ```kql
-> SecurityEvent
-> | where EventID in (4624, 4776)
-> | where AuthenticationPackage == "NTLM"
-> | summarize dcount(Computer) by AccountName, bin(TimeGenerated, 1d)
-> | where dcount_Computer > 3
-> ```
----
+***
 
 ### Referencias Externas
 
@@ -175,4 +123,4 @@ Para el análisis profundo y la creación de reglas en el SIEM, es fundamental n
 
 ### Documentación Relacionada
 
-[[Técnicas de persistencia y ejecución en endpoints]]
+[[01 - Técnicas de persistencia y ejecución en endpoints]]

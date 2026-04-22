@@ -60,6 +60,5 @@ El uso del Diamond Model permite al Hunter realizar el "Pivoting":
 
 ### Documentación Relacionada
 
-[[Filosofía y estrategia del Threat Hunting]]
-[[Modelo Diamante como guía de CTH]]
-[[Dataset de ataque simulado (logs y malware samples controlados)]]
+[[01 - Filosofía y estrategia del Threat Hunting]]
+[[09 - Modelo Diamante como guía de CTH]]

@@ -62,5 +62,4 @@ Para tu entorno de CTH, estas herramientas materializan los conceptos anteriores
 
 ### Documentación Relacionada
 
-[[Filosofía y estrategia del Threat Hunting]]
-[[Hipótesis y casos de usos comunes]]
+[[01 - Filosofía y estrategia del Threat Hunting]]

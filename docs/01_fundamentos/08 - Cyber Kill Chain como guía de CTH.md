@@ -107,6 +107,6 @@ DeviceNetworkEvents
 
 ### Documentación Relacionada
 
-[[Filosofía y estrategia del Threat Hunting]]
-[[MITRE ATT&CK como guía de CTH]]
-[[Modelo Diamante como guía de CTH]]
+[[01 - Filosofía y estrategia del Threat Hunting]]
+[[07 - MITRE ATT&CK como guía de CTH]]
+[[09 - Modelo Diamante como guía de CTH]]

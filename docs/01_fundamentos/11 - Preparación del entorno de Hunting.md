@@ -96,4 +96,5 @@ Antes de iniciar la búsqueda, se deben garantizar estos seis pilares estratégi
 
 ### Documentación Relacionada
 
-[[Filosofía y estrategia del Threat Hunting]]
+[[01 - Filosofía y estrategia del Threat Hunting]]
+[[01 - Creación de elastic-security-lab]]
