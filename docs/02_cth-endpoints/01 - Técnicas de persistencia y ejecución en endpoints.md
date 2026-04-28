@@ -110,3 +110,4 @@ Requiere:
 [[07 - Cómo formular búsquedas efectivas]]  
 [[08 - Casos de ransomware, Cobalt Strike y keyloggers]]  
 [[01 - Filosofía y estrategia del Threat Hunting]]
+[[01 - Glosario de Hunting]]

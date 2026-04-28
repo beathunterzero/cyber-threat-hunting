@@ -169,3 +169,4 @@ DeviceProcessEvents
 ## Documentación Relacionada
 
 [[01 - Técnicas de persistencia y ejecución en endpoints]]
+[[01 - Glosario de Hunting]]

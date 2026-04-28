@@ -221,3 +221,4 @@ La integración efectiva con CTI implica:
 [[01 - Guía para la caza de amenazas]]  
 [[09 - Uso de IoCs de fuentes abiertas]]  
 [[10 - Convertir inteligencia en hipótesis de hunting]]
+[[01 - Glosario de Hunting]]

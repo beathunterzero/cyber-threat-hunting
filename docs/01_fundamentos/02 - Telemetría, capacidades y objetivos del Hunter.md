@@ -146,3 +146,4 @@ El hunting no solo busca incidentes, busca mejorar la defensa:
 ## Documentación Relacionada
 
 [[01 - Filosofía y estrategia del Threat Hunting]]
+[[01 - Glosario de Hunting]]

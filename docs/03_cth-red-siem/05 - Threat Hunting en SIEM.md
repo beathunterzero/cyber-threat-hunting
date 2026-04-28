@@ -142,3 +142,4 @@ Diferencia clave:
 
 [[01 - Guía para la caza de amenazas]]  
 [[06 - Ejemplo de hipótesis en SIEM]]
+[[01 - Glosario de Hunting]]

@@ -139,3 +139,4 @@ Antes de hacer hunting:
 
 [[01 - Filosofía y estrategia del Threat Hunting]]  
 [[01 - Creación de elastic-security-lab]]
+[[01 - Glosario de Hunting]]

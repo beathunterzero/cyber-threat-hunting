@@ -289,4 +289,5 @@ La conversión es el punto donde Threat Hunting deja de ser exploración y se co
 [[01 - Madurez y métricas de hunting]]  
 [[05 - Threat Hunting en SIEM]]  
 [[06 - Queries y hunting en EDR]]
-[[10 - Convertir inteligencia en hipótesis de hunting]]  
+[[10 - Convertir inteligencia en hipótesis de hunting]]
+[[01 - Glosario de Hunting]]

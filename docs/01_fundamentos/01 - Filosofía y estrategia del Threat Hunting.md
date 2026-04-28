@@ -122,3 +122,4 @@ Las defensas tradicionales (AV, Firewalls, IDS basados en firmas) son insuficien
 [[12 - Comparación detallada de EDR y SIEM]]  
 [[13 - Dataset de ataque simulado (logs y malware samples controlados)]]  
 [[01 - Creación de elastic-security-lab]]
+[[01 - Glosario de Hunting]]

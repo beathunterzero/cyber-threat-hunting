@@ -112,3 +112,4 @@ Objetivo:
 
 [[01 - Filosofía y estrategia del Threat Hunting]]  
 [[09 - Modelo Diamante como guía de CTH]]
+[[01 - Glosario de Hunting]]

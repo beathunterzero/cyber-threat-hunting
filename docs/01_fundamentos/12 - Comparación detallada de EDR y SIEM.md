@@ -136,3 +136,4 @@ Uso típico:
 ## Documentación Relacionada
 
 [[01 - Filosofía y estrategia del Threat Hunting]]
+[[01 - Glosario de Hunting]]

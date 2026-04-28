@@ -124,3 +124,4 @@ MITRE permite:
 [[01 - Filosofía y estrategia del Threat Hunting]]  
 [[08 - Cyber Kill Chain como guía de CTH]]  
 [[09 - Modelo Diamante como guía de CTH]]
+[[01 - Glosario de Hunting]]

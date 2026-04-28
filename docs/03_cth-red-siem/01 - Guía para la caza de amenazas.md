@@ -132,3 +132,4 @@ Objetivo recomendado: **Nivel 3 (Definido)**
 [[09 - Uso de IoCs de fuentes abiertas]]  
 [[10 - Convertir inteligencia en hipótesis de hunting]]  
 [[01 - Filosofía y estrategia del Threat Hunting]]
+[[01 - Glosario de Hunting]]

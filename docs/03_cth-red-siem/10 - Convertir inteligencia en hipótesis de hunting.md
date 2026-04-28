@@ -201,3 +201,4 @@ El Threat Hunting efectivo no consume inteligencia, la transforma en lógica ope
 [[01 - Guía para la caza de amenazas]]  
 [[08 - Integración con CTI]]  
 [[09 - Uso de IoCs de fuentes abiertas]]
+[[01 - Glosario de Hunting]]

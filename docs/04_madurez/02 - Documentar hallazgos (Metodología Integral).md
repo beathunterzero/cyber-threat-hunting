@@ -248,4 +248,5 @@ La documentación es parte del ciclo de detección.
 [[10 - Convertir inteligencia en hipótesis de hunting]]  
 [[05 - Threat Hunting en SIEM]]  
 [[06 - Queries y hunting en EDR]]
-[[08 - Integración con CTI]]  
+[[08 - Integración con CTI]]
+[[01 - Glosario de Hunting]]

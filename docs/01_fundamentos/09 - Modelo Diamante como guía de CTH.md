@@ -199,3 +199,4 @@ DeviceNetworkEvents
 [[01 - Filosofía y estrategia del Threat Hunting]]  
 [[07 - MITRE ATT&CK como guía de CTH]]  
 [[08 - Cyber Kill Chain como guía de CTH]]
+[[01 - Glosario de Hunting]]

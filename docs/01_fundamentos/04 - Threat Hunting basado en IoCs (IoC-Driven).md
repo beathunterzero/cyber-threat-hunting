@@ -112,3 +112,4 @@ Clasificación según valor operativo:
 [[01 - Filosofía y estrategia del Threat Hunting]]  
 [[05 - Threat Hunting basado en Hipótesis (Hypothesis-Driven)]]  
 [[06 - Threat Hunting basado en Analítica (Analytics-Driven)]]
+[[01 - Glosario de Hunting]]

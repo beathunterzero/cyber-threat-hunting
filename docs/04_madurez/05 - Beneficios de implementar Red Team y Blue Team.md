@@ -266,4 +266,5 @@ El valor del Red vs Blue no está en el ejercicio, sino en lo que produce despu�
 [[03 - Conversión de hunts en casos de uso para SIEM y SOAR]]  
 [[04 - KPIs de hunting (detecciones nuevas, reducción MTTR)]]
 [[05 - Threat Hunting en SIEM]]  
-[[06 - Queries y hunting en EDR]]  
+[[06 - Queries y hunting en EDR]]
+[[01 - Glosario de Hunting]]

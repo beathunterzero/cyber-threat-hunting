@@ -249,3 +249,4 @@ El uso de IoCs de fuentes abiertas es:
 [[01 - Guía para la caza de amenazas]]  
 [[08 - Integración con CTI]]  
 [[10 - Convertir inteligencia en hipótesis de hunting]]
+[[01 - Glosario de Hunting]]

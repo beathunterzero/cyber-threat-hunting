@@ -138,3 +138,4 @@ Acción:
 
 [[01 - Guía para la caza de amenazas]]  
 [[03 - Detección de beaconing y tráfico anómalo]]
+[[01 - Glosario de Hunting]]

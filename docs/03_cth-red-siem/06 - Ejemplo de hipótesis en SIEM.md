@@ -171,3 +171,4 @@ FROM logs-*
 
 [[01 - Guía para la caza de amenazas]]  
 [[05 - Threat Hunting en SIEM]]
+[[01 - Glosario de Hunting]]

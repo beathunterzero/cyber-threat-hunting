@@ -217,3 +217,4 @@ La madurez en Threat Hunting no es una función aislada, es un sistema:
 [[05 - Threat Hunting en SIEM]]  
 [[06 - Queries y hunting en EDR]]  
 [[01 - Filosofía y estrategia del Threat Hunting]]
+[[01 - Glosario de Hunting]]

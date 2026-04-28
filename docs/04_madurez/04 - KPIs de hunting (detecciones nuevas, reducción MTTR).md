@@ -195,3 +195,4 @@ Los KPIs no son métricas decorativas.
 [[02 - Documentar hallazgos (Metodología Integral)]]  
 [[03 - Conversión de hunts en casos de uso para SIEM y SOAR]]  
 [[05 - Threat Hunting en SIEM]]
+[[01 - Glosario de Hunting]]

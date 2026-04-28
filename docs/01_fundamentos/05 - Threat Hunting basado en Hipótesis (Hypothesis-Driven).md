@@ -137,3 +137,4 @@ Para que este enfoque funcione, se requiere visibilidad completa:
 [[01 - Filosofía y estrategia del Threat Hunting]]  
 [[04 - Threat Hunting basado en IoCs (IoC-Driven)]]  
 [[06 - Threat Hunting basado en Analítica (Analytics-Driven)]]
+[[01 - Glosario de Hunting]]

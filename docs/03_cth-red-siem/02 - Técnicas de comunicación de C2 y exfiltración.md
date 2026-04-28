@@ -144,3 +144,4 @@ Patrones observables:
 ## Documentación Relacionada
 
 [[01 - Guía para la caza de amenazas]]
+[[01 - Glosario de Hunting]]

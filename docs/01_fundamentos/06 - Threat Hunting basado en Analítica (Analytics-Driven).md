@@ -115,3 +115,4 @@ La analítica sin contexto genera ruido. CTI permite:
 [[01 - Filosofía y estrategia del Threat Hunting]]  
 [[04 - Threat Hunting basado en IoCs (IoC-Driven)]]  
 [[05 - Threat Hunting basado en Hipótesis (Hypothesis-Driven)]]
+[[01 - Glosario de Hunting]]
