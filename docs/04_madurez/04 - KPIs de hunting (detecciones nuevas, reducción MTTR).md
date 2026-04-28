@@ -1,90 +1,197 @@
-## 1. Importancia de las Métricas en el Mantenimiento de Seguridad
+## 1. Propósito
 
-El éxito de un programa de hunting no se mide solo por los incidentes encontrados, sino por la capacidad de mejorar la resiliencia del SOC. El **MTTR (Mean Time to Respond)** y la **Tasa de Conversión de Reglas** son los indicadores definitivos de que el equipo está pasando de una postura reactiva a una proactiva.
+Los KPIs en Threat Hunting existen para responder una pregunta:
 
----
+> **¿El hunting está mejorando la capacidad de detección del SOC o solo genera actividad?**
 
-## 2. Estructura de Documentación de KPIs (6 Pasos Integrados)
+El valor no está en “cazar”, sino en:
 
-### **I. Identificación del caso**
-
-- **ID de Métrica:** MET-HUNT-01 (Métricas de Eficiencia Operativa).
+- Reducir tiempos de detección y respuesta
     
-- **Entorno Evaluado:** Ciclo de vida de incidentes en SIEM/SOAR.
+- Aumentar cobertura de TTPs
     
-- **Modelo Diamante (Víctima):** El KPI mide la protección de la **Víctima** (infraestructura) reduciendo el tiempo de exposición ante el **Adversario**.
-    
-
-### **II. Hipótesis y objetivo**
-
-- **Hipótesis Operativa:** "Un programa de hunting maduro reduce el tiempo de permanencia del atacante y automatiza la detección de TTPs conocidos".
-    
-- **Objetivo:** Cuantificar el retorno de inversión (ROI) del tiempo dedicado a la cacería.
-    
-- **Cyber Kill Chain:** El objetivo es detectar la amenaza en las fases de **Entrega** o **Explotación**, evitando que llegue a **Acciones sobre Objetivos**.
-    
-
-### **III. Fuentes de datos utilizadas**
-
-- **Telemetría:** Timestamps de detección y respuesta en el SIEM/SOAR, registros de casos cerrados, repositorio de reglas (Git/Wiki).
-    
-- **Mapeo MITRE ATT&CK:** Cobertura de técnicas detectables antes vs. después del hunt.
-    
-
-### **IV. Evidencias y resultados (Los KPIs)**
-
-De acuerdo a la inteligencia recolectada, estos son los pilares de medición:
-
-|**KPI**|**Descripción Técnica**|**Propósito del Modelo**|
-|---|---|---|
-|**Conversión de Detecciones**|% de reglas nuevas que surgieron de actividades de hunting manual.|**Capacidad:** Mejora las herramientas defensivas del SOC.|
-|**Reducción de MTTR**|Disminución del tiempo promedio de respuesta ante incidentes detectados proactivamente.|**Kill Chain:** Interrupción temprana de la cadena de ataque.|
-|**Precisión de Hallazgos**|Tasa de hallazgos válidos vs. falsos positivos.|**Diamante:** Identificación precisa de la relación Infra-Adversario.|
-|**Time to Rule (TTRu)**|Tiempo promedio para convertir un hallazgo en una regla operativa en el SIEM.|**Agilidad:** Velocidad de transferencia de conocimiento técnico.|
-|**Cobertura de Amenazas**|Incremento porcentual de técnicas cubiertas en el framework MITRE ATT&CK.|**Visibilidad:** Reducción de puntos ciegos en la infraestructura.|
-
-### **V. Análisis y conclusiones**
-
-- **Interpretación:** Un MTTR bajo indica que el hunting está generando detecciones de alta fidelidad que el SOAR puede orquestar rápidamente.
-    
-- **Validación:** Si el _Time to Rule_ es alto, existe un cuello de botella en la ingeniería de detección que debe resolverse.
-    
-- **Correlación:** La mejora en la **Cobertura de Amenazas** (MITRE) reduce directamente las posibilidades del **Adversario** (Diamante) de avanzar sin ser detectado.
-    
-
-### **VI. Recomendaciones y acciones**
-
-- **Contención:** Implementar playbooks de SOAR para los casos con MTTR más crítico.
-    
-- **Ingeniería de Detección:** Priorizar la creación de reglas para técnicas de MITRE con baja cobertura (Gap Analysis).
-    
-- **Mejora Continua:** Revisar trimestralmente la tasa de falsos positivos para refinar las queries de hunting.
+- Generar detecciones reutilizables
     
 
 ---
 
-## 3. Fórmulas de Control
+## 2. Principio Operativo
 
-Para tu seguimiento técnico, puedes usar estas métricas de rendimiento:
+> Un programa de hunting maduro se mide por lo que automatiza, no por lo que investiga.
 
-- **Tasa de Conversión:**
+---
+
+## 3. KPIs Clave (Correctos y Accionables)
+
+---
+
+### 1. Conversión de Detecciones (Detection Conversion Rate)
+
+- **Definición:**  
+    % de hunts que terminan en una regla productiva
     
-    $$(Nuevas Detecciones / Hunts Ejecutados) \times 100$$
+- **Por qué importa:**  
+    Mide si el hunting genera valor real
     
-- **MTTR Global:**
-    
-    $$(\sum Tiempo de Respuesta) / Nro. de Incidentes$$
+- **Objetivo:**  
+    Aumentar progresivamente
     
 
 ---
 
-### Referencias
+### 2. MTTR (Mean Time to Respond)
 
-- [SANS: Measuring and Improving SOC Performance](https://www.sans.org/)
+- **Definición:**  
+    Tiempo desde detección → contención
     
-- [MITRE ATT&CK: Evaluation Methodology](https://www.google.com/url?sa=E&source=gmail&q=https://attack.mitre.org/)
+- **Por qué importa:**  
+    Mide la capacidad de respuesta del SOC
+    
+- **Relación directa:**  
+    SIEM (detección) + SOAR (respuesta)
     
 
-### Documentación Relacionada
+---
 
-[[01 - Madurez y métricas de hunting]]
+### 3. MTTD (Mean Time to Detect)
+
+- **Definición:**  
+    Tiempo desde compromiso → detección
+    
+- **Por qué importa:**  
+    Reduce el _dwell time_
+    
+
+---
+
+### 4. Time to Rule (TTRu)
+
+- **Definición:**  
+    Tiempo desde hallazgo → regla en producción
+    
+- **Por qué importa:**  
+    Mide la velocidad de ingeniería de detección
+    
+
+---
+
+### 5. Precisión de Detección
+
+- **Definición:**  
+    % de alertas válidas vs falsos positivos
+    
+- **Por qué importa:**  
+    Impacta directamente en fatiga del analista
+    
+
+---
+
+### 6. Cobertura de TTPs
+
+- **Definición:**  
+    % de técnicas cubiertas en MITRE ATT&CK
+    
+- **Por qué importa:**  
+    Mide visibilidad real, no volumen de logs
+    
+
+---
+
+## 4. KPIs que debes evitar o reinterpretar
+
+Eliminar o reducir:
+
+- Uso del Diamond Model en métricas
+    
+- Uso de Kill Chain como indicador
+    
+- KPIs teóricos sin impacto operativo
+    
+
+---
+
+## 5. Fórmulas Operativas
+
+---
+
+### Tasa de Conversión
+
+Conversion\ Rate = \frac{Detections\ Created}{Hunts\ Executed} \times 100
+
+---
+
+### MTTR
+
+MTTR = \frac{\sum Response\ Time}{Total\ Incidents}
+
+---
+
+### MTTD
+
+MTTD = \frac{\sum Detection\ Time}{Total\ Incidents}
+
+---
+
+### Time to Rule
+
+TTRu = \frac{\sum Time\ to\ Production}{Total\ Detections}
+
+---
+
+## 6. Interpretación Correcta
+
+- **Alta conversión + bajo TTRu →** equipo eficiente
+    
+- **Bajo MTTR →** buena automatización (SOAR)
+    
+- **Alto MTTD →** problema en detección
+    
+- **Alta cobertura MITRE →** reducción de puntos ciegos
+    
+
+---
+
+## 7. Uso Real en el SOC
+
+Estos KPIs deben alimentar:
+
+- Dashboards operativos
+    
+- Reportes de madurez
+    
+- Priorización de hunts
+    
+- Roadmap de detección
+    
+
+---
+
+## 8. Conclusión Técnica
+
+Los KPIs no son métricas decorativas.
+
+---
+
+### Principio final
+
+> Si no puedes medirlo, no puedes mejorar el hunting.
+
+---
+
+## Referencias Externas
+
+- [https://attack.mitre.org/](https://attack.mitre.org/)
+    
+- [https://attack.mitre.org/resources/working-with-attack/](https://attack.mitre.org/resources/working-with-attack/)
+    
+- [https://www.sans.org/white-papers/37702/](https://www.sans.org/white-papers/37702/)
+    
+
+---
+
+## Documentación Relacionada
+
+[[01 - Madurez y métricas de hunting]]  
+[[02 - Documentar hallazgos (Metodología Integral)]]  
+[[03 - Conversión de hunts en casos de uso para SIEM y SOAR]]  
+[[05 - Threat Hunting en SIEM]]

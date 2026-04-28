@@ -1,69 +1,114 @@
-## 1. Definición y Concepto
+## 1. ¿Qué es el IoC-Driven Hunting?
 
-El **Threat Hunting basado en IoCs** (Indicadores de Compromiso) es un enfoque donde la cacería se dispara a partir de datos tácticos obtenidos de **Ciberinteligencia (CTI)**. Se busca evidencia de actividad maliciosa ya conocida en el entorno para determinar si el adversario ha tenido presencia histórica o actual.
+El **Threat Hunting basado en IoCs** utiliza indicadores conocidos obtenidos de **Ciberinteligencia (CTI)** para buscar evidencia de actividad maliciosa en el entorno.
 
-## 2. Indicadores de Infraestructura y Red (Taxonomía)
-
-Para una cacería efectiva en red, debemos clasificar los artefactos según su función dentro de la comunicación del atacante:
-
-|**Categoría de Objeto**|**Indicadores Específicos (IoCs)**|**Valor de Caza**|
-|---|---|---|
-|**Certificados TLS/SSL**|Fingerprints (JA3/JA3S), Nombres de Emisor, SNI inusuales, Certificados auto-firmados.|Identifica herramientas (Cobalt Strike) e infra de C2.|
-|**SSH**|Claves públicas reutilizadas, algoritmos de cifrado específicos.|Vincula diferentes campañas a un mismo actor.|
-|**Dominios**|Algoritmos DGA, dominios de reciente creación, Typosquatting.|Detecta puntos de contacto de malware y phishing.|
-|**Patrones DNS**|Longitud excesiva de consultas, registros TXT inusuales, alta frecuencia de peticiones.|Detecta exfiltración de datos y canales de C2 ocultos.|
-
-## 3. Flujo Operativo del Hunt
-
-1. **Ingesta de Inteligencia:** Recepción de reportes de CTI detallando la infraestructura del atacante.
+- Parte de datos ya conocidos
     
-2. **Extracción de Artefactos:** Identificación de certificados, claves SSH o patrones DNS específicos.
+- Busca presencia **histórica o actual**
     
-3. **Búsqueda Retrospectiva:** Consultas en **Kibana** sobre logs de red buscando coincidencias históricas.
+- Enfocado en artefactos específicos (no comportamiento)
     
-4. **Validación y Enriquecimiento:** Verificar si el SNI o el certificado coinciden con servicios legítimos para descartar falsos positivos.
-    
-
-## 4. Limitaciones y la Pirámide del Dolor
-
-Operamos en los niveles **Bajo y Medio** de la Pirámide:
-
-- **Durabilidad:** Los atacantes rotan certificados y dominios con facilidad.
-    
-- **Evasión:** El uso de servicios legítimos (_Domain Fronting_) puede enmascarar estos indicadores.
-    
-
-## 5. Aplicación Práctica en el Lab (Consultas KQL)
-
-- **SNI sospechoso:** `network.protocol: "tls" AND tls.server.name: /.*secure-update.*/`
-    
-- **DGAs (DNS):** `dns.question.name: /.{25,}/`
-    
-- **Huella JA3:** `tls.client.ja3_hash : "7739105ed22b10..."`
-    
-
-## 6. Clasificación de Indicadores según Obtención y Utilidad
-
-Para priorizar la búsqueda, clasificamos los indicadores según el esfuerzo que requiere conseguirlos y su relevancia para la investigación:
-
-|**Tipo de Indicador**|**Facilidad de Obtención**|**Utilidad para el Hunter**|
-|---|---|---|
-|**Fácil (Low Hanging Fruit)**|Alta (Listas públicas, feeds gratuitos)|Media/Baja (Son volátiles)|
-|**Específico de la Amenaza**|Media (Reportes de CTI cerrados, análisis de malware)|Alta (Identifica campañas concretas)|
-|**Generado por la Investigación**|Baja (Requiere análisis manual y forense)|Muy Alta (Es telemetría propia y única)|
-|**Comportamientos (TTPs)**|Muy Baja (Requiere correlación avanzada)|Máxima (Detección duradera)|
 
 ---
 
-### Referencias Externas
+## 2. Tipos de IoCs en red
 
-- MITRE ATT&CK® Matrix
+Clasificación de indicadores según su uso en infraestructura atacante:
+
+|Categoría|Indicadores|Valor|
+|---|---|---|
+|TLS/SSL|JA3/JA3S, SNI, certificados|Identifica herramientas y C2|
+|SSH|Claves públicas, algoritmos|Relación entre campañas|
+|Dominios|DGA, dominios nuevos, typosquatting|Infraestructura maliciosa|
+|DNS|Queries largas, TXT inusuales, frecuencia alta|C2 encubierto / exfiltración|
+
+---
+
+## 3. Flujo de un IoC Hunt
+
+1. **Ingesta CTI**
     
-- SANS Institute: Threat Hunting with Tactical Analysis
+    - Recepción de indicadores (reportes, feeds)
+        
+2. **Extracción de IoCs**
+    
+    - Dominios, hashes, certificados, patrones
+        
+3. **Búsqueda en logs**
+    
+    - Consultas en SIEM (ej. Kibana)
+        
+4. **Validación**
+    
+    - Filtrar falsos positivos
+        
+    - Verificar contexto (servicios legítimos vs maliciosos)
+        
+
+---
+
+## 4. Limitaciones del enfoque
+
+El IoC Hunting opera en niveles bajos de la detección:
+
+- **Alta rotación:** IPs, dominios y certificados cambian rápido
+    
+- **Fácil evasión:** uso de infraestructura legítima (CDN, cloud)
+    
+- **Poca durabilidad:** detección de corto plazo
     
 
-### Documentación Relacionada
+---
 
-[[01 - Filosofía y estrategia del Threat Hunting]]
-[[05 - Threat Hunting basado en Hipótesis (Hypothesis-Driven)]]
+## 5. Ejemplos prácticos (KQL)
+
+- **SNI sospechoso**
+    
+    ```kql
+    network.protocol: "tls" AND tls.server.name: /.*secure-update.*/
+    ```
+    
+- **Dominios tipo DGA**
+    
+    ```kql
+    dns.question.name: /.{25,}/
+    ```
+    
+- **JA3 conocido**
+    
+    ```kql
+    tls.client.ja3_hash: "7739105ed22b10..."
+    ```
+    
+
+---
+
+## 6. Prioridad de indicadores
+
+Clasificación según valor operativo:
+
+|Tipo|Obtención|Valor|
+|---|---|---|
+|IoCs públicos|Alta|Bajo|
+|IoCs específicos|Media|Alto|
+|IoCs propios|Baja|Muy alto|
+|TTPs|Muy baja|Máximo|
+
+---
+
+## Referencias Externas
+
+- [https://attack.mitre.org/](https://attack.mitre.org/)
+    
+- [https://www.sans.org/white-papers/35502/](https://www.sans.org/white-papers/35502/)
+    
+- [https://detect-respond.blogspot.com/2013/03/the-pyramid-of-pain.html](https://detect-respond.blogspot.com/2013/03/the-pyramid-of-pain.html)
+    
+
+---
+
+## Documentación Relacionada
+
+[[01 - Filosofía y estrategia del Threat Hunting]]  
+[[05 - Threat Hunting basado en Hipótesis (Hypothesis-Driven)]]  
 [[06 - Threat Hunting basado en Analítica (Analytics-Driven)]]

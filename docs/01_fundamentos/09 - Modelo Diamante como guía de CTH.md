@@ -1,78 +1,168 @@
-## 1. Definición y Enfoque Relacional
+## 1. ¿Qué es el Diamond Model?
 
-El **Diamond Model of Intrusion Analysis** es un marco conceptual que analiza eventos de seguridad mediante la interconexión de cuatro elementos fundamentales: **Adversario, Infraestructura, Capacidad y Víctima**. A diferencia de otros modelos, el Diamante no es lineal ni técnico-específico, sino **relacional**, permitiendo al hunter pivotear entre datos aislados para reconstruir una campaña completa.
+El **Diamond Model** analiza intrusiones a través de la relación entre cuatro elementos:
 
-## 2. Los Cuatro Vértices del Diamante
-
-### 2.1 Adversary (Adversario)
-
-Representa al actor responsable del ataque.
-
-- **Perfiles:** APT (ej. APT29), cibercriminales (ej. FIN7), insiders o hacktivistas.
+- **Adversario**
     
-- **Uso en CTH:** Mapeo de TTPs conocidos y predicción de comportamientos futuros basados en inteligencia de amenazas (CTI).
+- **Infraestructura**
+    
+- **Capacidad**
+    
+- **Víctima**
     
 
-### 2.2 Infrastructure (Infraestructura)
+No es un modelo lineal.  
+Se usa para **pivotear entre datos** y reconstruir actividad del atacante.
 
-El medio lógico o físico que el adversario emplea para interactuar con la víctima.
+---
 
-- **Componentes:** Servidores C2, dominios, direcciones IP, servicios Cloud abusados, infraestructuras _Fast-Flux_.
+## 2. Componentes del modelo
+
+### 2.1 Adversario
+
+- Actor que ejecuta el ataque
     
-- **Uso en CTH:** Ejecución de hunts orientados a red y detección de actividad de mando y control mediante telemetría de tráfico.
-    
-
-### 2.3 Capability (Capacidad)
-
-Herramientas, malware o técnicas tácticas que el adversario despliega.
-
-- **Recursos:** Frameworks (Cobalt Strike), scripts, malware (LockBit), o técnicas de explotación de vulnerabilidades.
-    
-- **Uso en CTH:** Identificación de patrones repetitivos en el endpoint y creación de detecciones basadas en el comportamiento del artefacto.
+- Ej: APTs, cibercriminales, insiders
     
 
-### 2.4 Victim (Víctima)
+Uso en hunting:
 
-El objetivo del ataque, definido por el sector, geografía o activos específicos.
-
-- **Entidades:** Usuarios con privilegios, bases de datos críticas, servidores de dominio o infraestructura OT.
+- Asociar TTPs conocidos
     
-- **Uso en CTH:** Priorización de jornadas de caza basadas en el valor del activo y detección de patrones de "Targeting".
+- Anticipar comportamiento
     
 
-## 3. Dinámica de Pivoteo y Relaciones
+---
 
-El valor operativo reside en las aristas que conectan los vértices:
+### 2.2 Infraestructura
 
-- **Adversario ↔ Infraestructura:** Identificación de recursos recurrentes de un actor.
-    
-- **Infraestructura ↔ Víctima:** Correlación de hosts internos con centros de mando externos.
-    
-- **Capacidad ↔ Víctima:** Análisis del impacto técnico en activos específicos.
-    
-- **Adversario ↔ Capacidad:** Vinculación de herramientas con firmas de comportamiento características de un grupo.
+- Medio usado por el atacante
     
 
-## 4. Implementación en el Proceso de Hunting
+Ejemplos:
 
-### 4.1 Metodología de Pivoteo
-
-1. **Vértice Inicial:** Se identifica un IoC (ej. un dominio sospechoso en la Infraestructura).
+- IPs
     
-2. **Expansión:** Se analiza qué víctimas se conectaron a ese dominio y qué capacidades (procesos/scripts) se ejecutaron tras la conexión.
+- Dominios
     
-3. **Hipótesis:** _"Si el dominio detectado pertenece a la infraestructura de FIN7, identificaremos el uso de herramientas de escalada de privilegios en los hosts afectados"_.
+- Servidores C2
+    
+- Cloud abusado
     
 
-### 4.2 Ejemplo de Aplicación Técnica (KQL)
+Uso en hunting:
 
-Búsqueda de procesos hijos anómalos (Capacidad) en hosts que han interactuado con IPs sospechosas (Infraestructura):
+- Detección de comunicación externa
+    
+- Identificación de C2
+    
 
-Fragmento de código
+---
+
+### 2.3 Capacidad
+
+- Herramientas y técnicas utilizadas
+    
+
+Ejemplos:
+
+- Malware
+    
+- Scripts
+    
+- Frameworks (Cobalt Strike)
+    
+
+Uso en hunting:
+
+- Identificar comportamiento repetitivo
+    
+- Crear detecciones
+    
+
+---
+
+### 2.4 Víctima
+
+- Objetivo del ataque
+    
+
+Ejemplos:
+
+- Usuarios privilegiados
+    
+- Servidores críticos
+    
+- Bases de datos
+    
+
+Uso en hunting:
+
+- Priorizar activos
+    
+- Detectar targeting
+    
+
+---
+
+## 3. Valor del modelo
+
+El valor está en las **relaciones**:
+
+- Adversario ↔ Infraestructura
+    
+- Infraestructura ↔ Víctima
+    
+- Capacidad ↔ Víctima
+    
+- Adversario ↔ Capacidad
+    
+
+Permite:
+
+- Conectar eventos aislados
+    
+- Ampliar contexto
+    
+- Identificar campañas completas
+    
+
+---
+
+## 4. Uso en Threat Hunting
+
+### Flujo básico
+
+1. **Punto inicial**
+    
+    - IoC o evento sospechoso
+        
+2. **Pivotear**
+    
+    - Qué host se conecta
+        
+    - Qué procesos ejecuta
+        
+    - Qué técnica usa
+        
+3. **Expandir contexto**
+    
+    - Relacionar con actor o campaña
+        
+4. **Generar hipótesis**
+    
+    - Basada en relaciones observadas
+        
+
+---
+
+## 5. Ejemplo práctico (KQL)
+
+Correlación entre red (infraestructura) y procesos (capacidad):
 
 ```kql
 DeviceNetworkEvents
-| where RemoteIP == "X.X.X.X" // IP identificada como Infraestructura
+| where RemoteIP == "X.X.X.X"
 | project DeviceName, Timestamp
 | join kind=inner (
     DeviceProcessEvents
@@ -81,27 +171,31 @@ DeviceNetworkEvents
 | where Timestamp1 between (Timestamp .. datetime_add('hour', 1, Timestamp))
 ```
 
-## 5. Comparativa de Frameworks Estratégicos
+---
 
-|**Framework**|**Enfoque Principal**|**Aplicación en Hunting**|
+## 6. Relación con otros frameworks
+
+|Framework|Enfoque|Uso|
 |---|---|---|
-|**MITRE ATT&CK**|Técnicas y Tácticas|**Qué** buscar (comportamiento técnico).|
-|**Cyber Kill Chain**|Fases temporales|**Cuándo** intervenir (etapa del ataque).|
-|**Diamond Model**|Relaciones|**Cómo** se conecta el evento con el actor.|
+|MITRE ATT&CK|Técnicas|Qué buscar|
+|Cyber Kill Chain|Fases|Cuándo detectar|
+|Diamond Model|Relaciones|Cómo conectar|
 
 ---
 
-### Referencias Externas
+## Referencias Externas
 
-- [The Diamond Model of Intrusion Analysis (Original Paper)](https://apps.dtic.mil/sti/pdfs/ADA586960.pdf)
+- [https://apps.dtic.mil/sti/pdfs/ADA586960.pdf](https://apps.dtic.mil/sti/pdfs/ADA586960.pdf)
     
-- [SANS Institute: Intrusión Analysis with the Diamond Model](https://www.google.com/search?q=https://www.sans.org/white-papers/35292/)
+- [https://www.sans.org/white-papers/35292/](https://www.sans.org/white-papers/35292/)
     
-- [Microsoft: Tracking threat actors with the Diamond Model](https://www.microsoft.com/en-us/security/blog/)
+- [https://learn.microsoft.com/en-us/security/operations/incident-response-playbooks](https://learn.microsoft.com/en-us/security/operations/incident-response-playbooks)
     
 
-### Documentación Relacionada
+---
 
-[[01 - Filosofía y estrategia del Threat Hunting]]
-[[07 - MITRE ATT&CK como guía de CTH]]
+## Documentación Relacionada
+
+[[01 - Filosofía y estrategia del Threat Hunting]]  
+[[07 - MITRE ATT&CK como guía de CTH]]  
 [[08 - Cyber Kill Chain como guía de CTH]]

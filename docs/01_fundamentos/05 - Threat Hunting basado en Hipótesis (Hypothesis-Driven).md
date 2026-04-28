@@ -1,79 +1,139 @@
-## 1. Definición y Concepto
+## 1. ¿Qué es el Hypothesis-Driven Hunting?
 
-El **Threat Hunting basado en Hipótesis** es el enfoque más proactivo y avanzado de la disciplina. A diferencia del modelo basado en IoCs, aquí el cazador no espera a recibir un indicador externo; en su lugar, utiliza el conocimiento profundo de las **TTPs** (Tácticas, Técnicas y Procedimientos) de los atacantes para suponer que una actividad maliciosa está ocurriendo en el entorno.
+El **Threat Hunting basado en hipótesis** es el enfoque más **proactivo**.
 
-Este enfoque se sitúa en la **cúspide de la Pirámide del Dolor**, ya que busca identificar comportamientos que son difíciles de modificar para el adversario.
-
-## 2. Origen de las Hipótesis
-
-Según la metodología, una hipótesis sólida no surge del azar, sino de tres fuentes principales de conocimiento:
-
-- **Tácticas y Técnicas (MITRE ATT&CK):** Análisis de cómo los atacantes logran persistencia, escalado de privilegios o exfiltración.
+- No depende de IoCs externos
     
-- **Inteligencia de Amenazas (CTI):** Adaptar el comportamiento de un grupo de APT conocido a la infraestructura propia (ej. _"Si el grupo Lazarus usa tareas programadas para persistencia, ¿cómo se vería eso en mis servidores Windows?"_).
+- Parte del conocimiento de **TTPs**
     
-- **Experiencia y Contexto:** Conocimiento del analista sobre qué es "normal" y qué es "anómalo" dentro de su red específica.
+- Asume que el atacante ya está presente
+    
+- Busca **comportamientos**, no artefactos
     
 
-## 3. Tipos de Hunting por Hipótesis
-
-Las cacerías se clasifican según el tipo de comportamiento que intentan descubrir:
-
-- **Hunting de Persistencia:** Búsqueda de mecanismos que permitan al atacante mantener el acceso (registros `Run`, servicios nuevos, WMI Event Subscriptions).
-    
-- **Hunting de Movimiento Lateral:** Detección de uso inusual de RDP, SMB o autenticaciones sospechosas en controladores de dominio.
-    
-- **Hunting de Exfiltración:** Identificación de flujos de datos anómalos hacia nubes públicas o protocolos no estándar (DNS, ICMP).
-    
-- **Hunting de LOLBins:** Vigilancia sobre el uso de binarios legítimos (`mshta.exe`, `certutil.exe`, `powershell.exe`) con argumentos sospechosos.
-    
-
-## 4. El Flujo de Trabajo (Workflow Táctico)
-
-Este modelo sigue un proceso riguroso para evitar "pescar en el vacío":
-
-1. **Formulación:** Redactar una pregunta clara. _"¿Existe algún proceso legítimo inyectado con código malicioso en mi red?"_.
-    
-2. **Identificación de Datos:** Determinar qué logs necesito (ej. Sysmon Event ID 10 para inyección de procesos).
-    
-3. **Ejecución:** Realizar consultas avanzadas en **Kibana** o **Velociraptor**.
-    
-4. **Confirmación/Refutación:** Analizar los resultados para validar si la hipótesis era correcta.
-    
-
-## 5. Cuadro Comparativo: Niveles de Caza
-
-Es fundamental entender dónde se sitúa este enfoque dentro de las capacidades del Hunter:
-
-|**Característica**|**Basado en IoCs (Reactivo)**|**Basado en Hipótesis (Proactivo)**|
-|---|---|---|
-|**Dificultad**|Baja (Automatizable con feeds)|Alta (Requiere analista experto)|
-|**Durabilidad**|Muy Baja (Los IPs/Hashes mueren rápido)|Muy Alta (Los TTPs son duraderos)|
-|**Valor Estratégico**|Operativo / Limpieza|Estratégico / Maduración del SOC|
-|**Enfoque**|Artefactos estáticos|Comportamientos dinámicos|
-
-## 6. Fuentes de Datos Críticas (Telemetría Requerida)
-
-Para que el hunting basado en hipótesis sea viable, el laboratorio debe contar con visibilidad total sobre los siguientes objetos, tal como indica la taxonomía técnica del curso:
-
-|**Objeto de Investigación**|**Atributos Críticos a Analizar**|
-|---|---|
-|**Procesos (Endpoint)**|Parent/Child relationship, Command Line arguments, DLLs cargadas.|
-|**Red (Network)**|Conexiones persistentes de bajo ancho de banda (Beacons), certificados TLS inusuales.|
-|**Sistema Operativo**|Modificaciones en claves de registro críticas, creación de usuarios locales, limpieza de logs.|
-|**Archivos**|Creación de ejecutables en directorios temporales (`AppData`, `Temp`).|
+Opera en la **cúspide de la Pirámide del Dolor**.
 
 ---
 
-### Referencias Externas
+## 2. ¿De dónde salen las hipótesis?
 
-- [MITRE ATT&CK Framework](https://www.google.com/url?sa=E&source=gmail&q=https://attack.mitre.org/)
+Una hipótesis válida se basa en:
+
+- **MITRE ATT&CK:**
     
-- [The Threat Hunting Project: Hypothesis Generation](https://www.google.com/search?q=https://www.threathunting.net/hunts)
+    - Técnicas de persistencia, ejecución, movimiento lateral
+        
+- **CTI (Threat Intelligence):**
+    
+    - Adaptación de TTPs de actores reales al entorno propio
+        
+- **Contexto interno:**
+    
+    - Conocimiento de lo normal vs anómalo
+        
+
+Ejemplo:
+
+> Si un atacante usa tareas programadas para persistencia, ¿cómo se vería en mis sistemas?
+
+---
+
+## 3. Tipos de hunting por hipótesis
+
+- **Persistencia:**
+    
+    - Run keys, servicios, WMI subscriptions
+        
+- **Movimiento lateral:**
+    
+    - Uso anómalo de RDP, SMB, autenticaciones
+        
+- **Exfiltración:**
+    
+    - Tráfico hacia cloud o protocolos no comunes
+        
+- **LOLBins:**
+    
+    - Uso sospechoso de `powershell.exe`, `certutil.exe`, `mshta.exe`
+        
+
+---
+
+## 4. Flujo de trabajo
+
+1. **Formulación**
+    
+    - Definir una hipótesis clara
+        
+2. **Datos requeridos**
+    
+    - Identificar logs necesarios (Sysmon, red, OS)
+        
+3. **Ejecución**
+    
+    - Consultas en SIEM / EDR
+        
+4. **Validación**
+    
+    - Confirmar o descartar la hipótesis
+        
+
+---
+
+## 5. IoC vs Hypothesis Hunting
+
+|IoC-Driven|Hypothesis-Driven|
+|---|---|
+|Reactivo|Proactivo|
+|Basado en artefactos|Basado en comportamiento|
+|Fácil de automatizar|Requiere análisis|
+|Baja durabilidad|Alta durabilidad|
+|Bajo valor estratégico|Alto valor estratégico|
+
+---
+
+## 6. Telemetría necesaria
+
+Para que este enfoque funcione, se requiere visibilidad completa:
+
+- **Procesos:**
+    
+    - Parent/Child
+        
+    - Command line
+        
+    - DLLs cargadas
+        
+- **Red:**
+    
+    - Conexiones persistentes
+        
+    - TLS sospechoso
+        
+- **Sistema:**
+    
+    - Registro, usuarios, logs
+        
+- **Archivos:**
+    
+    - Ejecución en `AppData`, `Temp`
+        
+
+---
+
+## Referencias Externas
+
+- [https://attack.mitre.org/](https://attack.mitre.org/)
+    
+- [https://www.threathunting.net/hunts/](https://www.threathunting.net/hunts/)
+    
+- [https://detect-respond.blogspot.com/2013/03/the-pyramid-of-pain.html](https://detect-respond.blogspot.com/2013/03/the-pyramid-of-pain.html)
     
 
-### Documentación Relacionada
+---
 
-[[01 - Filosofía y estrategia del Threat Hunting]]
-[[04 - Threat Hunting basado en IoCs (IoC-Driven)]]
+## Documentación Relacionada
+
+[[01 - Filosofía y estrategia del Threat Hunting]]  
+[[04 - Threat Hunting basado en IoCs (IoC-Driven)]]  
 [[06 - Threat Hunting basado en Analítica (Analytics-Driven)]]

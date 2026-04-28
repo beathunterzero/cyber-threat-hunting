@@ -1,71 +1,154 @@
-## 1. Definición y Enfoque Operativo
+## 1. ¿Qué se busca?
 
-Esta sección aplica la metodología de caza a tres de las amenazas más críticas y frecuentes en el panorama actual de la ciberseguridad. El objetivo es traducir el comportamiento de cada amenaza en anomalías detectables en la telemetría del EDR o SIEM, alejándose de la dependencia de firmas tradicionales (Hashes/IPs) y enfocándose en TTPs (Tácticas, Técnicas y Procedimientos).
+Detectar amenazas reales mediante **comportamiento (TTPs)**.
 
-## 2. Estrategias de Hunting por Amenaza
+Enfoque:
 
-Con base en los escenarios operativos, la búsqueda debe estructurarse de la siguiente manera para cada tipo de amenaza:
-
-### **1. Ransomware (Impacto y Cifrado)**
-
-El ransomware no intenta ser sigiloso en su fase final; su característica principal es la destrucción o secuestro masivo de datos.
-
-- **Comportamiento Objetivo:** Comportamientos inusuales en los archivos del sistema y procesos masivos de cifrado.
+- No depender de IoCs
     
-- **Estrategia de Caza (Hunting):** La búsqueda más eficaz debe formularse para identificar un **alto número de escrituras (writes) o modificaciones de archivos en un corto período de tiempo** originadas por un único proceso.
+- Traducir actividad en patrones detectables
     
-- **Indicadores Adicionales:** Eliminación de _Shadow Copies_ (`vssadmin`, `wmic shadowcopy delete`), modificación masiva de extensiones de archivos y creación de notas de rescate (archivos `.txt` o `.html` repetidos en múltiples directorios).
+- Usar telemetría de endpoint y red
     
-
-### **2. Cobalt Strike (Comando y Control / Post-explotación)**
-
-Cobalt Strike es una herramienta comercial de emulación de adversarios (C2) ampliamente abusada por actores de amenazas avanzadas (APTs) y operadores de ransomware.
-
-- **Comportamiento Objetivo:** Comunicación sigilosa con la infraestructura del atacante y movimiento lateral.
-    
-- **Estrategia de Caza (Hunting):** La búsqueda debe enfocarse en dos frentes:
-    
-    1. **Red:** Identificar la comunicación con sus _beacons_ (balizas), buscando patrones de _jitter_ y _sleep_ en conexiones HTTP/HTTPS o DNS hacia dominios desconocidos.
-        
-    2. **Endpoint:** Identificar comportamientos asociados a la **inyección de procesos** (Process Injection), como procesos legítimos (ej. `rundll32.exe`, `svchost.exe`) abriendo conexiones de red anómalas o asignando memoria de forma sospechosa.
-        
-
-### **3. Keyloggers (Robo de Credenciales y Espionaje)**
-
-Los keyloggers, ya sean independientes o módulos de un troyano (RAT), buscan capturar información sensible directamente de la interacción del usuario.
-
-- **Comportamiento Objetivo:** Interceptación continua de dispositivos de entrada de datos (teclado).
-    
-- **Estrategia de Caza (Hunting):** La búsqueda se orienta a identificar actividades sospechosas relacionadas con la captura de pulsaciones del teclado o la creación de archivos ocultos donde se almacenan esas pulsaciones para su posterior exfiltración.
-    
-- **APIs Críticas a Monitorear:** El Hunter debe enfocarse en el uso inusual de APIs nativas de Windows diseñadas para esta interceptación, tales como:
-    
-    - `SetWindowsHookEx` (Instala un "gancho" para monitorear el tráfico de mensajes del sistema).
-        
-    - `GetAsyncKeyState` (Determina si una tecla específica está siendo presionada en ese momento).
-        
 
 ---
 
-## 3. Matriz de Detección Rápida
+## 2. Estrategias por amenaza
 
-|**Tipo de Amenaza**|**Foco Principal de Telemetría**|**Eventos / APIs Críticas para Correlación**|
+### 2.1 Ransomware
+
+**Objetivo:**
+
+- Cifrado masivo de archivos
+    
+
+**Qué buscar:**
+
+- Alto volumen de escritura en poco tiempo
+    
+- Un solo proceso modificando muchos archivos
+    
+
+**Indicadores:**
+
+- Eliminación de shadow copies (`vssadmin`, `wmic`)
+    
+- Cambios masivos de extensiones
+    
+- Archivos de rescate repetidos
+    
+
+---
+
+### 2.2 Cobalt Strike
+
+**Objetivo:**
+
+- Control remoto (C2)
+    
+- Post-explotación
+    
+
+**Qué buscar:**
+
+**Red:**
+
+- Beaconing (intervalos regulares)
+    
+- Conexiones a dominios desconocidos
+    
+
+**Endpoint:**
+
+- Procesos legítimos con actividad anómala
+    
+- Inyección de procesos
+    
+
+Ejemplos:
+
+- `rundll32.exe` con tráfico de red
+    
+- `svchost.exe` fuera de patrón
+    
+
+---
+
+### 2.3 Keyloggers
+
+**Objetivo:**
+
+- Captura de credenciales
+    
+
+**Qué buscar:**
+
+- Interacción con teclado
+    
+- Archivos ocultos de registro
+    
+
+**APIs críticas:**
+
+- `SetWindowsHookEx`
+    
+- `GetAsyncKeyState`
+    
+
+Indicadores:
+
+- Archivos `.log` o `.dat` en `AppData`
+    
+- Procesos accediendo input sin contexto
+    
+
+---
+
+## 3. Matriz rápida
+
+|Amenaza|Foco|Indicadores|
 |---|---|---|
-|**Ransomware**|File System (I/O) / Procesos|Picos de `FileWrite`, borrado de backups, Sysmon Event ID 11 (FileCreate).|
-|**Cobalt Strike**|Red (C2) / Memoria|Conexiones de red intermitentes, Sysmon Event ID 8 (CreateRemoteThread).|
-|**Keyloggers**|Llamadas a API / File System|`SetWindowsHookEx`, `GetAsyncKeyState`, archivos `.log` o `.dat` ocultos en `AppData`.|
+|Ransomware|File system|Escrituras masivas|
+|Cobalt Strike|Red + memoria|Beaconing + inyección|
+|Keylogger|API + archivos|Hooks + logs ocultos|
 
 ---
 
-### Referencias Externas
+## 4. Enfoque de hunting
 
-- [MITRE ATT&CK: Data Encrypted for Impact (T1486)](https://attack.mitre.org/techniques/T1486/)
+- Priorizar comportamiento
     
-- [MITRE ATT&CK: Input Capture / Keylogging (T1056.001)](https://attack.mitre.org/techniques/T1056/001/)
+- Correlacionar endpoint + red
     
-- [SANS Institute: Cobalt Strike Threat Hunting Guide](https://www.sans.org/white-papers/)
+- Detectar patrones repetitivos
+    
+- Validar contra baseline
     
 
-### Documentación Relacionada
+---
+
+## 5. Objetivo final
+
+- Detectar antes del impacto
+    
+- Reducir dwell time
+    
+- Convertir hallazgos en detecciones
+    
+
+---
+
+## Referencias Externas
+
+- [https://attack.mitre.org/techniques/T1486/](https://attack.mitre.org/techniques/T1486/)
+    
+- [https://attack.mitre.org/techniques/T1056/001/](https://attack.mitre.org/techniques/T1056/001/)
+    
+- [https://www.sans.org/white-papers/](https://www.sans.org/white-papers/)
+    
+
+---
+
+## Documentación Relacionada
 
 [[01 - Técnicas de persistencia y ejecución en endpoints]]

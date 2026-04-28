@@ -1,100 +1,141 @@
-## 1. Definición y Propósito
+## 1. ¿Qué es la preparación del entorno?
 
-La **preparación del entorno** es el primer paso operativo y la fase fundamental para garantizar que el analista cuente con las herramientas, datos y accesos necesarios antes de iniciar cualquier búsqueda de amenazas. Sin una visibilidad adecuada (telemetría), el Threat Hunting se vuelve imposible. El objetivo es configurar una infraestructura capaz de recolectar, centralizar y analizar eventos en tiempo real e histórico.
+Es la fase previa al hunting donde se garantiza:
 
-## 2. Componentes de la Infraestructura de Hunting
-
-Un entorno robusto se compone de tres capas principales:
-
-- **Fuentes de Datos (Endpoints y Red):** Generan los eventos crudos (Logs de Windows, Sysmon, tráfico de red).
+- **Visibilidad suficiente**
     
-- **Agentes de Recolección (EDR/Forwarders):** Herramientas como **Velociraptor** y **Elastic Agent** que extraen y envían la telemetría.
+- **Datos confiables**
     
-- **Plataforma de Análisis (SIEM):** El stack de **Elastic Security** donde se normalizan, indexan y consultan los datos mediante KQL.
+- **Herramientas operativas**
     
 
-## 3. Fuentes de Datos Críticas (Telemetría)
+Sin telemetría → no hay hunting.
 
-|**Fuente**|**Tipo de Datos**|**Utilidad en el Hunting**|
+---
+
+## 2. Componentes del entorno
+
+Tres capas básicas:
+
+- **Fuentes de datos:**
+    
+    - Endpoints, red, cloud
+        
+- **Agentes de recolección:**
+    
+    - EDR, forwarders
+        
+- **Plataforma de análisis (SIEM):**
+    
+    - Centralización y consultas
+        
+
+---
+
+## 3. Telemetría mínima requerida
+
+|Fuente|Datos|Uso|
 |---|---|---|
-|**Windows Event Logs**|Seguridad, Sistema, Aplicación.|Autenticaciones (4624/4625), creación de servicios.|
-|**Sysmon**|Telemetría profunda de procesos.|Identificación de inyección de código, conexiones de red por proceso.|
-|**EDR (Velociraptor)**|Artefactos forenses (MFT, Registro).|Análisis de persistencia y recolección de evidencias en "caliente".|
-|**Logs de Red**|DNS, TLS, HTTP, Netflow.|Detección de balizamiento (Beacons) y exfiltración.|
+|Windows Logs|Autenticación, servicios|Accesos, privilegios|
+|Sysmon|Procesos, red, archivos|Actividad técnica|
+|EDR|Artefactos, memoria|Persistencia, comportamiento|
+|Network|DNS, HTTP, NetFlow|C2, exfiltración|
 
-## 4. El Modelo Diamante en la Recolección
+---
 
-Al preparar el entorno, debemos asegurar que la telemetría recolectada nos permita completar los cuatro vértices del **Diamond Model**:
+## 4. Cobertura del Diamond Model
 
-1. **Víctima:** Logs que identifiquen el host, usuario o activo afectado.
-    
-2. **Infraestructura:** Logs de red que muestren IPs, dominios y certificados.
-    
-3. **Capacidad:** Telemetría de endpoint que capture el malware o herramientas.
-    
-4. **Adversario:** Datos que permitan atribuir el ataque mediante el cruce con CTI.
-    
+La telemetría debe permitir cubrir:
 
-## 5. Configuración Técnica del Laboratorio (Elastic + Velociraptor)
-
-- **Paso 1: Configuración de Auditoría:** Habilitar logs detallados (GPO) e instalar **Sysmon**.
+- **Víctima:** host, usuario
     
-- **Paso 2: Despliegue de Agentes:** Instalación de Elastic Agent y Velociraptor.
+- **Infraestructura:** IPs, dominios
     
-- **Paso 3: Ingesta en SIEM:** Verificación de que los datos llegan correctamente a Elastic.
+- **Capacidad:** procesos, malware
     
-- **Paso 4: Validación de Visibilidad:** Realizar una acción conocida y verificar su registro completo.
-    
-
-## 6. Calidad del Dato (Data Quality)
-
-- **Consistentes:** Uso del **Elastic Common Schema (ECS)**.
-    
-- **Oportunos:** Mínima latencia de ingesta.
-    
-- **Contextualizados:** Inclusión de metadatos del activo.
-    
-
-## 7. Comparativa de Enfoques de Datos y Herramientas
-
-|**Herramienta / Enfoque**|**Tipo de Detección**|**Nivel de Visibilidad**|**Carga de Análisis**|
-|---|---|---|---|
-|**SIEM (Elastic)**|Reglas y firmas (IoCs/TTPs).|Media/Alta.|Baja/Media.|
-|**EDR (Velociraptor)**|Comportamiento y forense.|Máxima.|Alta.|
-|**Network (Zeek)**|Protocolos y flujos.|Alta.|Media.|
-|**Threat Intelligence**|Contexto externo.|N/A.|Baja.|
-
-## 8. Pilares Operativos de la Preparación
-
-Antes de iniciar la búsqueda, se deben garantizar estos seis pilares estratégicos:
-
-1. **Objetivos:** Asegurar visibilidad total, integridad de la información y eficiencia en el análisis de datos.
-    
-2. **Centralización:** Acceso centralizado a logs de endpoints, tráfico de red, DNS, autenticación y sistemas en la nube.
-    
-3. **Herramientas:** Implementar EDR, SIEM, SOAR y utilidades forenses para análisis de memoria, tráfico y malware.
-    
-4. **Accesos y permisos:** Otorgar al equipo de hunting accesos controlados pero suficientes para consultas profundas.
-    
-5. **Validación:** Comprobar que los logs estén completos, sincronizados en tiempo y libres de errores de recolección.
-    
-6. **Entorno seguro:** Utilizar laboratorios aislados (**sandboxes**) para ejecutar muestras sospechosas sin riesgo.
+- **Adversario:** correlación con CTI
     
 
 ---
 
-### Referencias Externas
+## 5. Configuración básica
 
-- [SANS Institute: Blue Team Handbook](https://www.google.com/search?q=https://www.sans.org/white-papers/36302/)
+1. **Auditoría**
     
-- [Elastic Common Schema (ECS) Documentation](https://www.elastic.co/guide/en/ecs/current/index.html)
+    - Activar logs avanzados
+        
+    - Instalar Sysmon
+        
+2. **Agentes**
     
-- [Velociraptor Documentation & Artifact Reference](https://docs.velociraptor.app/)
+    - EDR / recolección
+        
+3. **Ingesta**
     
-- [Microsoft: Sysmon Documentation](https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon)
+    - Datos en SIEM
+        
+4. **Validación**
+    
+    - Ejecutar prueba y verificar logs
+        
+
+---
+
+## 6. Calidad del dato
+
+- **Consistencia:** normalización (ECS u otro)
+    
+- **Latencia baja:** datos en tiempo útil
+    
+- **Contexto:** metadata del activo
     
 
-### Documentación Relacionada
+---
 
-[[01 - Filosofía y estrategia del Threat Hunting]]
+## 7. Herramientas y enfoque
+
+|Fuente|Tipo|Visibilidad|Esfuerzo|
+|---|---|---|---|
+|SIEM|Correlación|Media/Alta|Bajo|
+|EDR|Comportamiento|Alta|Alto|
+|Network|Tráfico|Alta|Medio|
+|CTI|Contexto|N/A|Bajo|
+
+---
+
+## 8. Pilares operativos
+
+Antes de hacer hunting:
+
+- **Objetivos claros**
+    
+- **Centralización de datos**
+    
+- **Herramientas listas**
+    
+- **Accesos adecuados**
+    
+- **Datos validados**
+    
+- **Entorno controlado (lab/sandbox)**
+    
+
+---
+
+## Referencias Externas
+
+- [https://www.elastic.co/guide/en/ecs/current/index.html](https://www.elastic.co/guide/en/ecs/current/index.html)
+    
+- [https://docs.velociraptor.app/](https://docs.velociraptor.app/)
+    
+- [https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon](https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon)
+    
+- [https://www.sans.org/white-papers/36302/](https://www.sans.org/white-papers/36302/)
+    
+
+---
+
+## Documentación Relacionada
+
+[[01 - Filosofía y estrategia del Threat Hunting]]  
 [[01 - Creación de elastic-security-lab]]

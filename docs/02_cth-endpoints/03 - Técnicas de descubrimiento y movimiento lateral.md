@@ -1,23 +1,42 @@
-## 1. Definición y Enfoque Operativo
+## 1. ¿Qué se busca?
 
-Esta fase engloba las **acciones utilizadas por los atacantes dentro de una red comprometida para reconocer el entorno, identificar objetivos y expandir su acceso hacia otros sistemas o cuentas más privilegiadas.** El reto para el Threat Hunter es que en estas fases los atacantes se mezclan con la actividad normal de los administradores de red, por lo que la detección depende de identificar desviaciones en el comportamiento habitual.
+Detectar cómo el atacante:
 
-## 2. Pirámide de Descubrimiento y Movimiento Lateral
+- **Reconoce el entorno**
+    
+- **Identifica objetivos**
+    
+- **Se mueve dentro de la red**
+    
 
-De acuerdo con el modelo operativo del curso, las tácticas se estructuran en los siguientes niveles (de reconocimiento inicial a ejecución profunda), junto con sus huellas de detección:
+Problema:
 
-|**Nivel de Táctica**|**Técnica / Acción**|**Huellas para Detección (Indicadores)**|
+- Estas acciones se parecen a actividad administrativa legítima
+    
+
+Clave:
+
+- Detectar **desviaciones del comportamiento normal**
+    
+
+---
+
+## 2. Etapas típicas
+
+|Nivel|Técnica|Indicadores|
 |---|---|---|
-|**1**|**Escaneo y descubrimiento de red**|Picos inusuales de tráfico de descubrimiento, múltiples conexiones a puertos comunes (135/137/139/445) desde un mismo host.|
-|**2**|**Enumeración de cuentas y recursos (Account/Service Discovery)**|Consultas repetitivas a APIs de directorio, enumeración de SMB/LDAP fuera del comportamiento normal, búsquedas masivas de cuentas.|
-|**3**|**Robo de credenciales y uso de credenciales robadas (credential harvesting / reuse)**|Accesos remotos desde cuentas elevadas fuera de horario, uso de herramientas de dumping, autenticaciones con hashes en lugar de contraseñas.|
-|**4**|**Abuso de servicios remotos: RDP, WinRM / PowerShell Remoting**|Nuevas sesiones RDP entre hosts donde no suelen existir, ejecución remota de PowerShell desde orígenes inesperados, muchos intentos de autenticación remota.|
-|**5**|**Ejecución remota vía SMB, PsExec o creación de servicios remotos**|Creación/escalado de servicios remotos, procesos iniciados por cuentas de administración desde hosts no habituales, llamadas a PsExec identificables en logs.|
-|**6**|**WMI / WMIC y Scheduled Tasks para ejecución remota y persistencia**|Creación de `CommandLineEventConsumer/filters`, tareas programadas nuevas o modificadas por usuarios no autorizados, actividad WMI fuera de patrones normales.|
+|1|Descubrimiento de red|Escaneos, conexiones a múltiples puertos|
+|2|Enumeración|Consultas masivas a AD, SMB, LDAP|
+|3|Credenciales|Accesos fuera de horario, uso de hashes|
+|4|Servicios remotos|RDP/WinRM inusual|
+|5|Ejecución remota|PsExec, servicios remotos|
+|6|WMI / Tasks|WMI anómalo, tareas nuevas|
 
-## 3. Comandos Comunes (LOLBins de Reconocimiento)
+---
 
-Para ejecutar el Nivel 2 de la pirámide, los atacantes suelen utilizar herramientas nativas (_Living Off the Land_). Estos comandos deben vigilarse si se ejecutan en secuencias rápidas:
+## 3. Comandos comunes (LOLBins)
+
+Indicadores de reconocimiento cuando aparecen en secuencia:
 
 - `whoami /all`
     
@@ -27,25 +46,93 @@ Para ejecutar el Nivel 2 de la pirámide, los atacantes suelen utilizar herramie
     
 - `nltest /dclist:`
     
-- `ipconfig /all` y `arp -a`
+- `ipconfig /all`
     
-
-## 4. Estrategia de Caza para el Threat Hunter
-
-- **Contexto de la Línea de Comandos:** Comandos como `net user` son de uso diario por parte de TI, pero si son ejecutados como procesos hijos de aplicaciones inusuales (como `winword.exe` o procesos web como `w3wp.exe`), representan un indicador crítico.
-    
-- **Análisis de Grafos de Red:** Es fundamental establecer una línea base de las conexiones RDP y SMB. Las comunicaciones laterales entre estaciones de trabajo (Workstation a Workstation) suelen ser la firma clara de una infección propagándose.
+- `arp -a`
     
 
 ---
 
-### Referencias Externas
+## 4. Indicadores clave
 
-- [MITRE ATT&CK: Discovery (TA0007)](https://attack.mitre.org/tactics/TA0007/)
+- Múltiples conexiones a:
     
-- [MITRE ATT&CK: Lateral Movement (TA0008)](https://attack.mitre.org/tactics/TA0008/)
+    - 135 / 137 / 139 / 445
+        
+- Autenticaciones:
+    
+    - fuera de horario
+        
+    - desde hosts inusuales
+        
+- Movimiento lateral:
+    
+    - Workstation → Workstation
+        
+- Ejecución remota:
+    
+    - PowerShell remoting
+        
+    - PsExec
+        
+    - WMI
+        
+
+---
+
+## 5. Estrategia de hunting
+
+### 5.1 Contexto de ejecución
+
+- Comandos administrativos son normales
+    
+- El problema es:
+    
+    - quién los ejecuta
+        
+    - desde dónde
+        
+    - en qué contexto
+        
+
+Ejemplo sospechoso:
+
+- `winword.exe` → `cmd.exe` → `net user`
     
 
-### Documentación Relacionada
+---
+
+### 5.2 Análisis de red
+
+- Definir baseline de RDP / SMB
+    
+- Detectar nuevas relaciones entre hosts
+    
+- Priorizar tráfico lateral no habitual
+    
+
+---
+
+## 6. Objetivo del hunting
+
+- Detectar expansión del atacante
+    
+- Identificar uso de credenciales
+    
+- Frenar movimiento lateral antes de impacto
+    
+
+---
+
+## Referencias Externas
+
+- [https://attack.mitre.org/tactics/TA0007/](https://attack.mitre.org/tactics/TA0007/)
+    
+- [https://attack.mitre.org/tactics/TA0008/](https://attack.mitre.org/tactics/TA0008/)
+    
+
+---
+
+## Documentación Relacionada
 
 [[01 - Técnicas de persistencia y ejecución en endpoints]]

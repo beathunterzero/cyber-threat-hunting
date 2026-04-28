@@ -1,6 +1,12 @@
 ## 1. Definición del Concepto
 
-Convertir inteligencia en hipótesis significa transformar la **Inteligencia de Amenazas (CTI)** bruta (tácticas, técnicas, procedimientos o IoCs) en suposiciones lógicas y verificables dentro de tu infraestructura. No es una adivinanza, sino una predicción informada basada en el comportamiento observado de los adversarios.
+Convertir inteligencia en hipótesis implica transformar datos de **Cyber Threat Intelligence (CTI)** —como TTPs, IoCs o patrones de ataque— en **suposiciones verificables dentro del entorno propio**.
+
+No es una inferencia vaga, sino una **traducción técnica del comportamiento adversario a telemetría observable**.
+
+**Objetivo operativo:**
+
+> Pasar de “lo que hace el atacante” → a “cómo se ve en mis logs”
 
 ---
 
@@ -8,49 +14,190 @@ Convertir inteligencia en hipótesis significa transformar la **Inteligencia de 
 
 |**Paso**|**Fase**|**Descripción Operativa**|
 |---|---|---|
-|**1**|**Preparación y Recolección de Inteligencia**|Reunir inteligencia de fuentes internas y externas (reportes, campañas recientes, TTPs). Se debe filtrar qué amenazas son realmente relevantes para tu industria y entorno tecnológico.|
-|**2**|**Formulación de la Hipótesis**|Generar suposiciones concretas de cómo se manifestaría la amenaza en tu red. Ejemplo: _"El actor X podría usar spear-phishing para desplegar una baliza de Cobalt Strike"_.|
-|**3**|**Alcance de Datos y Priorización**|Definir las fuentes de datos necesarias (Logs de red, Endpoints, DNS, etc.) y los segmentos de red a investigar. Se priorizan activos críticos (Crown Jewels) para optimizar el esfuerzo.|
-|**4**|**Diseño de Consultas y Ejecución**|Traducir la hipótesis a lenguaje técnico (Queries en KQL, Splunk SPL, etc.). Ejecutar búsquedas iterativas en el SIEM/EDR, ajustando parámetros según los resultados iniciales.|
-|**5**|**Análisis, Feedback y Refinamiento**|Validar hallazgos, descartar falsos positivos y documentar lo descubierto. La inteligencia se retroalimenta incorporando los nuevos IoCs o patrones detectados durante la caza.|
+|**1**|**Filtrado de Inteligencia**|Recolectar CTI (reportes, campañas, TTPs) y filtrar según relevancia real: tecnología, superficie expuesta y sector.|
+|**2**|**Abstracción del Comportamiento (TTP)**|Eliminar nombres de herramientas o malware. Enfocarse en el comportamiento: ejecución, persistencia, movimiento lateral, C2.|
+|**3**|**Mapeo a Telemetría**|Traducir la TTP a eventos concretos: procesos, red, autenticación, memoria, DNS. Definir qué logs permiten observar ese comportamiento.|
+|**4**|**Formulación de la Hipótesis**|Redactar una hipótesis clara, verificable y medible basada en la telemetría identificada.|
+|**5**|**Diseño, Ejecución y Validación**|Construir queries, ejecutar hunting, validar resultados, eliminar falsos positivos y convertir en detección si aplica.|
 
 ---
 
-## 3. De la Teoría a la Práctica (Caso de Ejemplo)
+## 3. Corrección Clave (Error Común)
 
-Para que tu documentación tenga sentido operativo, aquí tienes cómo se vería la transformación de un dato de CTI:
+### ❌ Enfoque incorrecto
 
-- **Inteligencia Recibida:** _"El grupo Lazarus está utilizando archivos .ISO maliciosos que contienen un LNK para ejecutar una DLL mediante regsvr32.exe"_.
+CTI → Query directa
+
+- Dependencia de IoCs
     
-- **Hipótesis de Hunting:** _"Si Lazarus está en mi red, veré procesos `regsvr32.exe` cargando DLLs desde rutas inusuales o siendo llamados por `explorer.exe` tras montar una imagen de disco"_.
+- Alta tasa de falsos positivos
     
-- **Acción Técnica:** Diseñar una query en el EDR que busque procesos hijos de `explorer.exe` que involucren montaje de ISOs y ejecución de archivos de sistema.
-    
-
----
-
-## 4. Por qué es vital este proceso
-
-Sin una hipótesis, el Threat Hunting es como buscar una aguja en un pajar sin saber si la aguja existe. Este flujo asegura que:
-
-1. La caza esté **enfocada** (ahorro de tiempo).
-    
-2. La caza sea **reproducible** (mejora continua).
-    
-3. Se incremente la **madurez** del SOC al convertir hallazgos en detecciones automáticas.
+- Baja durabilidad de detección
     
 
 ---
 
-### Referencias Externas
+### ✅ Enfoque correcto
 
-- [CrowdStrike: What is Threat Hunting?](https://www.crowdstrike.com/cybersecurity-101/threat-hunting/)
+CTI → TTP → Telemetría → Hipótesis → Query
+
+---
+
+### Interpretación técnica
+
+- **CTI** aporta contexto
     
-- [MITRE: TTP-Based Hypothesis Generation](https://attack.mitre.org/resources/working-with-attack/)
+- **TTP** define comportamiento
+    
+- **Telemetría** define visibilidad
+    
+- **Hipótesis** estructura la búsqueda
+    
+- **Query** ejecuta la detección
     
 
-### Documentación Relacionada
+---
 
-[[01 - Guía para la caza de amenazas]]
-[[08 - Integración con CTI]]
+### Principio operativo
+
+> No se cazan indicadores, se cazan comportamientos observables en datos.
+
+---
+
+## 4. De la Inteligencia a la Hipótesis (Ejemplo Práctico)
+
+### Inteligencia recibida
+
+- Grupo:  
+    [https://attack.mitre.org/groups/G0032/](https://attack.mitre.org/groups/G0032/)
+    
+- Técnica:  
+    Uso de `.ISO` + `.LNK` + `regsvr32.exe`
+    
+
+---
+
+### Abstracción de TTP
+
+- Ejecución indirecta mediante contenedor (ISO)
+    
+- Uso de LOLBin (`regsvr32`)
+    
+- Carga de DLL desde rutas no estándar
+    
+
+---
+
+### Hipótesis de Hunting
+
+> “Si un adversario utiliza ejecución indirecta mediante contenedores montados, observaremos procesos `regsvr32.exe` ejecutando DLLs desde rutas no estándar y lanzados por procesos de usuario como `explorer.exe`.”
+
+---
+
+### Telemetría requerida
+
+- Process Creation (Sysmon / EDR)
+    
+- CommandLine
+    
+- Parent Process
+    
+- File Path
+    
+
+---
+
+### Query de ejemplo (KQL)
+
+```kql
+DeviceProcessEvents
+| where FileName == "regsvr32.exe"
+| where ProcessCommandLine contains ".dll"
+| where not(ProcessCommandLine contains "system32")
+| where InitiatingProcessFileName == "explorer.exe"
+| project Timestamp, DeviceName, ProcessCommandLine, InitiatingProcessFileName
+```
+
+---
+
+## 5. Template Operativo para Hipótesis
+
+Para estandarizar en tu laboratorio:
+
+1. **Técnica MITRE:**  
+    [https://attack.mitre.org/](https://attack.mitre.org/)
+    
+2. **Contexto CTI:**  
+    Actor / campaña / vector
+    
+3. **Hipótesis:**  
+    Declaración verificable
+    
+4. **Telemetría requerida:**  
+    Logs necesarios
+    
+5. **Condición de detección:**  
+    Patrón esperado
+    
+6. **Query:**  
+    Implementación técnica
+    
+
+---
+
+## 6. Integración con el Proceso de Hunting
+
+Relación con documentos:
+
+- [[08 - Integración con CTI]] → Fuente
+    
+- [[09 - Uso de IoCs de fuentes abiertas]] → Input táctico
+    
+- [[10 - Convertir inteligencia en hipótesis de hunting]] → Transformación
+    
+- [[05 - Threat Hunting en SIEM]] / [[06 - Queries y hunting en EDR]] → Ejecución
+    
+
+---
+
+## 7. Valor Operativo
+
+Este proceso permite:
+
+- Reducir dependencia de IoCs
+    
+- Aumentar detección basada en comportamiento
+    
+- Crear reglas duraderas
+    
+- Elevar la madurez del SOC
+    
+
+---
+
+## 8. Conclusión Técnica
+
+El Threat Hunting efectivo no consume inteligencia, la transforma en lógica operativa.
+
+**Principio clave:**
+
+> La inteligencia solo es útil cuando puede ejecutarse como una hipótesis verificable en la telemetría.
+
+---
+
+## Referencias Externas
+
+- [https://attack.mitre.org/resources/working-with-attack/](https://attack.mitre.org/resources/working-with-attack/)
+    
+- [https://www.crowdstrike.com/cybersecurity-101/threat-hunting/](https://www.crowdstrike.com/cybersecurity-101/threat-hunting/)
+    
+- [https://attack.mitre.org/groups/G0032/](https://attack.mitre.org/groups/G0032/)
+    
+
+---
+
+## Documentación Relacionada
+
+[[01 - Guía para la caza de amenazas]]  
+[[08 - Integración con CTI]]  
 [[09 - Uso de IoCs de fuentes abiertas]]

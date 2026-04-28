@@ -1,87 +1,269 @@
-## 1. Marco Conceptual: La metodología de confrontación
+## 1. Propósito
 
-Inspirada en tácticas militares, esta metodología enfrenta a dos equipos con roles bien definidos: uno ofensivo (Red Team) y otro defensivo (Blue Team). El objetivo final no es que uno "gane", sino fortalecer la postura de ciberseguridad de la organización a través de la simulación realista de conflictos.
+El uso de Red Team y Blue Team tiene un objetivo concreto:
+
+> **Validar en la práctica si las capacidades de detección y respuesta realmente funcionan.**
+
+No es un ejercicio teórico ni solo de pentesting. Es un mecanismo de mejora directa del SOC.
 
 ---
 
-## 2. Estructura de Documentación Técnica (6 Pasos)
+## 2. Principio Operativo
 
-### **I. Identificación del caso**
+> Red Team genera señales reales → Blue Team debe detectarlas → Detection Engineering las convierte en detección permanente.
 
-- **ID del Ejercicio:** RTBT-SIM-01.
-    
-- **Entorno Evaluado:** Infraestructura crítica, redes corporativas y endpoints.
-    
-- **Modelo Diamante (Relación de Confrontación):** * El **Red Team** emula al **Adversario** (Tácticas, Técnicas y Procedimientos).
-    
-    - El **Blue Team** protege a la **Víctima** (Activos de la organización).
-        
+---
 
-### **II. Hipótesis y objetivo**
+## 3. Roles Reales (Enfoque Correcto)
 
-- **Hipótesis Operativa:** "La simulación de ataques reales permite identificar debilidades antes de que un atacante legítimo las explote, optimizando la capacidad de respuesta".
-    
-- **Objetivo:** Evaluación realista de la seguridad y preparación ante incidentes.
-    
-- **Cyber Kill Chain:** El Red Team intenta completar la cadena desde el **Reconocimiento** hasta las **Acciones sobre objetivos**, mientras el Blue Team busca romperla en la fase más temprana posible.
-    
+|Rol|Responsabilidad|
+|---|---|
+|Red Team|Simular comportamiento adversario (TTPs reales)|
+|Blue Team|Detectar, investigar y responder|
+|Threat Hunting|Buscar lo que no fue detectado|
+|Detection Engineering|Convertir hallazgos en reglas|
 
-### **III. Fuentes de datos utilizadas**
+---
 
-- **Red Team:** Herramientas de Pentesting, frameworks de ingeniería social y scripts de simulación de ataques.
-    
-- **Blue Team:** Logs de monitorización continua, sistemas de detección (SIEM/EDR), registros de análisis forense y plataformas de gestión de vulnerabilidades.
-    
-- **MITRE ATT&CK:** Uso de la base de conocimientos para seleccionar técnicas de emulación de adversarios.
-    
+## 4. Flujo Operativo Real
 
-### **IV. Evidencias y resultados (Comparativa de Roles)**
+**Simulación → Detección → Brecha → Mejora → Detección nueva**
 
-|**Característica**|**Red Team (Ofensivo)**|**Blue Team (Defensivo)**|
-|---|---|---|
-|**Enfoque**|Identificar vulnerabilidades simulando ataques.|Proteger y responder a ataques.|
-|**Actividades Clave**|Pruebas de penetración, ingeniería social, simulación de TTPs.|Monitorización, análisis forense, gestión de parches, respuesta a incidentes.|
-|**Modelo Diamante**|Genera nuevas **Capacidades** (scripts/exploits).|Defiende la **Infraestructura** y los activos.|
-|**Resultado final**|Informes de vulnerabilidades y vectores de ataque.|Implementación de medidas de seguridad y remediación.|
+---
 
-### **V. Análisis y conclusiones**
+### Fase 1: Ejecución (Red Team)
 
-- **Interpretación:** La interacción entre ambos equipos revela "puntos ciegos" en la monitorización y fallos en los controles preventivos.
+- Uso de técnicas reales (no solo exploits)
     
-- **Sinergia:** La colaboración fomenta una cultura de mejora constante. El Red Team enseña al Blue Team cómo piensan los atacantes, y el Blue Team obliga al Red Team a sofisticar sus métodos.
+- Simulación de TTPs
     
-- **Efectividad:** Se fortalece la capacidad de respuesta ante ataques reales mediante la práctica en escenarios controlados.
-    
-
-### **VI. Recomendaciones y acciones**
-
-- **Contención y Remediación:** Corregir proactivamente las debilidades detectadas por el Red Team.
-    
-- **Ingeniería de Detección:** Crear nuevas reglas en el SIEM/EDR basadas en las técnicas de **MITRE ATT&CK** que lograron evadir al Blue Team durante el ejercicio.
-    
-- **Gap Analysis:** Evaluar qué pasos de la **Cyber Kill Chain** fueron los más difíciles de detectar para priorizar inversiones en visibilidad de logs.
+- Generación de telemetría
     
 
 ---
 
-## 3. Beneficios Estratégicos Detectados
+### Fase 2: Detección (Blue Team)
 
-1. **Evaluación Realista:** No se basa en suposiciones, sino en la efectividad probada de las defensas.
+- Alertas del SIEM
     
-2. **Preparación ante Incidentes:** Reduce el pánico y el error humano durante un ataque real.
+- Telemetría del EDR
     
-3. **Cultura Proactiva:** Cambia el enfoque de "esperar la alerta" a "buscar la debilidad".
+- Respuesta inicial
     
 
 ---
 
-### Referencias Externas
+### Fase 3: Identificación de brechas
 
-- [NIST: Guide to Industrial Control Systems (ICS) Security - Red/Blue Team exercises](https://csrc.nist.gov/)
+- Técnicas no detectadas
     
-- [MITRE: Adversary Emulation Plans](https://attack.mitre.org/resources/adversary-emulation-plans/)
+- Logs insuficientes
+    
+- Falta de correlación
     
 
-### Documentación Relacionada
+---
 
-[[01 - Madurez y métricas de hunting]]
+### Fase 4: Hunting
+
+- Búsqueda manual de lo que evadió detección
+    
+- Identificación de patrones reales
+    
+
+---
+
+### Fase 5: Conversión
+
+- Nuevas reglas en SIEM
+    
+- Automatización en SOAR
+    
+
+---
+
+## 5. Uso Correcto de Frameworks
+
+### MITRE ATT&CK
+
+✔ Base para emulación del Red Team  
+✔ Base para detección del Blue Team  
+✔ Base para medir cobertura
+
+---
+
+### Cyber Kill Chain
+
+✔ Útil para entender fases  
+✘ No necesario en documentación operativa
+
+---
+
+### Diamond Model
+
+✘ No necesario en este proceso  
+✘ No aporta a detección directa
+
+---
+
+## 6. Qué se obtiene realmente
+
+---
+
+### 1. Validación de detección
+
+- ¿El SIEM detecta TTPs reales?
+    
+
+---
+
+### 2. Identificación de gaps
+
+- Técnicas sin cobertura
+    
+- Falta de telemetría
+    
+- Correlaciones inexistentes
+    
+
+---
+
+### 3. Generación de detecciones nuevas
+
+- Queries basadas en comportamiento real
+    
+- Reglas de alta fidelidad
+    
+
+---
+
+### 4. Mejora del MTTR
+
+- Playbooks más rápidos
+    
+- Respuesta automatizada
+    
+
+---
+
+### 5. Mejora del MTTD
+
+- Detección más temprana
+    
+- Reducción del _dwell time_
+    
+
+---
+
+## 7. Qué NO es Red vs Blue
+
+Evitar estos enfoques:
+
+- Competencia entre equipos
+    
+- Pentesting aislado sin detección
+    
+- Reportes sin impacto operativo
+    
+- Ejercicios sin conversión a reglas
+    
+
+---
+
+## 8. Plantilla Operativa para Obsidian
+
+````markdown
+# [RTBT-ID] - Ejercicio Red vs Blue
+
+**Estado:** [Testing / Finalizado]  
+**Scope:** [Endpoint / Network / Cloud]  
+
+---
+
+## 1. Técnicas Simuladas (Red Team)
+
+- Técnica 1:
+- Técnica 2:
+
+### MITRE ATT&CK
+- Tácticas:
+- Técnicas:
+
+---
+
+## 2. Detección (Blue Team)
+
+- Alertas generadas:
+- Eventos detectados:
+
+---
+
+## 3. Brechas Detectadas
+
+- Técnica no detectada:
+- Falta de logs:
+- Falta de correlación:
+
+---
+
+## 4. Hunting
+
+- Query utilizada:
+// Query
+- Hallazgos:
+
+---
+
+## 5. Nuevas Detecciones
+
+- Regla creada:
+- Lógica:
+- Cobertura MITRE:
+
+---
+
+## 6. Automatización (SOAR)
+
+- Acción 1:
+- Acción 2:
+
+---
+
+## 7. Métricas Impactadas
+
+- MTTD:
+- MTTR:
+- Cobertura:
+
+````
+
+---
+
+## 9. Conclusión Técnica
+
+El valor del Red vs Blue no está en el ejercicio, sino en lo que produce después.
+
+---
+
+### Principio final
+
+> Un ejercicio Red Team sin nuevas detecciones es un fallo del proceso.
+
+---
+
+## Referencias Externas
+
+- https://attack.mitre.org/  
+- https://attack.mitre.org/resources/adversary-emulation-plans/  
+- https://www.sans.org/white-papers/  
+
+---
+
+## Documentación Relacionada
+
+[[01 - Madurez y métricas de hunting]]  
+[[02 - Documentar hallazgos (Metodología Integral)]]  
+[[03 - Conversión de hunts en casos de uso para SIEM y SOAR]]  
+[[04 - KPIs de hunting (detecciones nuevas, reducción MTTR)]]
+[[05 - Threat Hunting en SIEM]]  
+[[06 - Queries y hunting en EDR]]  

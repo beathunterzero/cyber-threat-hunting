@@ -1,54 +1,64 @@
-## 1. Definición y Propósito
+## 1. ¿Qué se busca?
 
-Consiste en el monitoreo, detección y análisis de actividades relacionadas con accesos remotos y autenticaciones anómalas dentro de un entorno informático. El objetivo es identificar el uso no autorizado de protocolos de administración y el movimiento lateral antes de que el adversario logre comprometer activos críticos.
+Detectar **accesos remotos y autenticaciones anómalas** que indiquen:
 
-## 2. Identificación de RDP (Remote Desktop Protocol)
-
-El protocolo RDP es uno de los vectores más comunes para el movimiento lateral y la persistencia.
-
-**Indicadores clave:**
-
-- Nuevas conexiones RDP desde hosts internos anómalos o desde Internet.
+- Movimiento lateral
     
-- Múltiples intentos de autenticación fallida seguidos de un éxito (indicativo de _Brute Force_ o _Credential Stuffing_).
+- Uso indebido de credenciales
     
-- Inicio de sesión con **LogonType 10** (RemoteInteractive) por cuentas que no tienen perfiles de administración asignados.
-    
-- Sesiones RDP iniciadas por cuentas de servicio o ejecutadas fuera del horario laboral establecido.
+- Acceso no autorizado
     
 
-**Consulta de detección (Hunting Query - KQL):**
+---
 
-Fragmento de código
+## 2. RDP (Remote Desktop)
+
+Indicadores:
+
+- Conexiones desde hosts no habituales
+    
+- Intentos fallidos seguidos de éxito
+    
+- **LogonType 10** (RemoteInteractive)
+    
+- Accesos fuera de horario
+    
+- Uso de cuentas no administrativas
+    
+
+---
+
+### Ejemplo (KQL)
 
 ```kql
 SecurityEvent
 | where EventID == 4624
 | where LogonType == 10
-| where AccountType != "Machine" 
-| where TimeGenerated between (ago(7d) .. now())
+| where AccountType != "Machine"
 | summarize count() by Account, Computer, bin(TimeGenerated, 1h)
 | where count_ > 3
 ```
 
-## 3. Identificación de SMB (Server Message Block)
+---
 
-El abuso de SMB permite a los atacantes transferir herramientas y ejecutar comandos de forma remota (ej. vía `PsExec`).
+## 3. SMB (movimiento lateral)
 
-**Indicadores clave:**
+Indicadores:
 
-- Transferencias de archivos inusuales hacia recursos compartidos (`\\share`) desde equipos no autorizados.
+- Conexiones masivas a puerto 445
     
-- Conexiones SMB masivas a múltiples hosts en un periodo corto de tiempo (escaneo de red).
+- Transferencias a `\\share` inusuales
     
-- Uso de utilidades administrativas como `psexec.exe`, `smbclient` o la creación remota de servicios a través de SMB.
+- Uso de herramientas:
     
-- Acceso a archivos sensibles o directorios restringidos por cuentas que no pertenecen a dichos grupos de acceso.
-    
+    - `psexec`
+        
+    - ejecución remota
+        
 
-**Consulta de detección (Hunting Query - KQL):**
+---
 
-Fragmento de código
+### Ejemplo (KQL)
 
 ```kql
 DeviceNetworkEvents
@@ -57,24 +67,26 @@ DeviceNetworkEvents
 | where connections > 10
 ```
 
-## 4. Identificación de Pass-the-Hash (PtH)
+---
 
-Técnica donde el atacante utiliza el hash de una contraseña para autenticarse, evadiendo la necesidad del texto plano.
+## 4. Pass-the-Hash (PtH)
 
-**Indicadores clave:**
+Uso de hashes en lugar de contraseñas.
 
-- Autenticaciones NTLM inusuales entre hosts (EventID 4776 o 4624 con `AuthenticationPackage` = "NTLM").
+Indicadores:
+
+- Autenticación **NTLM** inusual
     
-- Uso de una misma cuenta privilegiada desde múltiples hosts en un tiempo reducido sin cambios de contraseña.
+- Misma cuenta en múltiples hosts
     
-- Detección de herramientas de volcado de credenciales (ej. _Mimikatz_) y accesos anómalos al proceso `lsass.exe`.
+- Acceso a `lsass.exe`
     
-- Creación de sesiones remotas con credenciales reutilizadas evidenciadas por el origen del inicio de sesión.
+- Herramientas como Mimikatz
     
 
-**Consulta de detección (Hunting Query - KQL):**
+---
 
-Fragmento de código
+### Ejemplo (KQL)
 
 ```kql
 SecurityEvent
@@ -84,43 +96,68 @@ SecurityEvent
 | where dcount_Computer > 3
 ```
 
-## 5. Artefactos y Evidencia Forense
+---
 
-La validación de estas amenazas requiere la búsqueda de los siguientes elementos en los hosts afectados:
+## 5. Evidencia en endpoint
 
-- **Dumps de memoria:** Presencia de volcados de `LSASS` o ficheros creados por herramientas de dumping en directorios temporales.
+Buscar:
+
+- Dumps de `lsass`
     
-- **Tickets de Autenticación:** Tickets NTLM/Kerberos malformados o evidencia de reutilización de tickets (_Pass-the-Ticket_).
+- Archivos temporales sospechosos
     
-- **Historial de Cuentas:** Análisis de los últimos hosts donde la cuenta se ha autenticado para identificar saltos laterales.
+- Historial de autenticaciones
     
-
-## 6. Mapeo de Campos de Eventos (Estandarización)
-
-Para el análisis profundo y la creación de reglas en el SIEM, es fundamental normalizar los siguientes campos según el modelo de datos de la captura:
-
-|**Campo**|**Descripción Técnica**|
-|---|---|
-|**EventID**|Identificador del evento Windows (ej. 4624, 4625, 4776).|
-|**LogonType**|Tipo de inicio de sesión (ej. 10 = RDP, 3 = Red).|
-|**AccountName / Domain**|Identidad del usuario y su dominio de origen.|
-|**ProcessCommandLine**|Línea de comandos completa ejecutada (crítico para detectar SMB/PsExec).|
-|**ParentProcessId**|Identificador del proceso padre para rastrear el origen de la ejecución.|
-|**RemoteIP / Port**|Dirección de origen y puerto de destino (ej. 445 para SMB, 3389 para RDP).|
-|**AuthenticationPackage**|Protocolo utilizado (NTLM vs Kerberos).|
-***
-
-### Referencias Externas
-
-- [Microsoft: Security Event ID 4624 - An account was successfully logged on](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4624)
-    
-- [MITRE ATT&CK: Remote Desktop Protocol (T1021.001)](https://attack.mitre.org/techniques/T1021/001/)
-    
-- [MITRE ATT&CK: SMB/Windows Admin Shares (T1021.002)](https://attack.mitre.org/techniques/T1021/002/)
-    
-- [MITRE ATT&CK: Pass the Hash (T1550.002)](https://attack.mitre.org/techniques/T1550/002/)
+- Uso anómalo de cuentas
     
 
-### Documentación Relacionada
+---
+
+## 6. Campos clave para análisis
+
+- `EventID` → tipo de evento
+    
+- `LogonType` → tipo de acceso
+    
+- `AccountName` → usuario
+    
+- `ProcessCommandLine` → comandos
+    
+- `ParentProcessId` → origen
+    
+- `RemoteIP / Port` → conexión
+    
+- `AuthenticationPackage` → NTLM / Kerberos
+    
+
+---
+
+## 7. Enfoque de hunting
+
+- Correlacionar autenticación + red
+    
+- Identificar uso anómalo de cuentas
+    
+- Detectar patrones repetitivos
+    
+- Validar contra baseline
+    
+
+---
+
+## Referencias Externas
+
+- [https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4624](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4624)
+    
+- [https://attack.mitre.org/techniques/T1021/001/](https://attack.mitre.org/techniques/T1021/001/)
+    
+- [https://attack.mitre.org/techniques/T1021/002/](https://attack.mitre.org/techniques/T1021/002/)
+    
+- [https://attack.mitre.org/techniques/T1550/002/](https://attack.mitre.org/techniques/T1550/002/)
+    
+
+---
+
+## Documentación Relacionada
 
 [[01 - Técnicas de persistencia y ejecución en endpoints]]

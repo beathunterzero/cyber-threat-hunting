@@ -1,138 +1,251 @@
 ## 1. Propósito de la Documentación
 
-Registrar de manera estructurada todo el proceso y los resultados obtenidos, garantizando trazabilidad, validación y mejora continua mediante el uso de marcos de trabajo estandarizados en la industria.
+La documentación en Threat Hunting tiene como objetivo **convertir una investigación manual en una capacidad de detección reutilizable y medible**.
+
+Debe permitir:
+
+- Trazabilidad
+    
+- Reproducibilidad
+    
+- Conversión a detección
+    
+- Mejora continua
+    
 
 ---
 
-## 2. Estructura de Documentación en 6 Pasos con Modelos Integrados
+## 2. Enfoque Operativo Correcto
 
-### **I. Identificación del caso**
+### Modelo principal:
 
-- **Título o ID del hunt:** Nombre único de la investigación.
+- Hypothesis-Driven Hunting
     
-- **Metadatos:** Fecha, analista responsable y entorno evaluado (red, endpoints, nube, etc.).
+
+### Soporte técnico:
+
+- MITRE ATT&CK
     
-- **Modelo Diamante (Contexto Inicial):**
+
+### Uso opcional:
+
+- Cyber Kill Chain (solo contexto)
     
-    - **Víctima:** Identificar el activo crítico o usuario afectado.
+- Diamond Model (solo pivoting)
+    
+
+---
+
+## 3. Estructura Operativa de Documentación
+
+---
+
+### I. Identificación del Hunt
+
+- Hunt ID
+    
+- Fecha
+    
+- Analista
+    
+- Scope
+    
+
+---
+
+### II. Hipótesis
+
+Debe ser clara, verificable y basada en CTI o comportamiento.
+
+---
+
+### III. Telemetría
+
+- Fuentes de datos
+    
+- Campos clave
+    
+
+---
+
+### IV. Query
+
+- Query exacta
+    
+- Rango temporal
+    
+- Scope
+    
+
+---
+
+### V. Evidencias
+
+- Procesos
+    
+- Conexiones
+    
+- Usuarios
+    
+- IoCs (solo si aportan valor)
+    
+- Mapeo a TTPs
+    
+
+---
+
+### VI. Análisis
+
+- Interpretación
+    
+- Resultado:
+    
+    - Confirmado
         
-    - **Infraestructura:** IPs o dominios iniciales detectados.
+    - Falso positivo
+        
+    - Sospechoso
         
 
-### **II. Hipótesis y objetivo**
+---
 
-- **Descripción de la hipótesis:** Por ejemplo: "Posible comunicación C2 mediante DNS tunneling".
-    
-- **Objetivo:** Qué se buscaba confirmar o descartar.
-    
-- **Cyber Kill Chain:** Identificar en qué fase se sitúa la hipótesis (ej. ¿Estamos buscando **Entrega**, **Instalación** o **Comando y Control**?).
-    
+### VII. Producción (Detection Engineering)
 
-### **III. Fuentes de datos utilizadas**
-
-- **Logs analizados:** Firewall, proxy, DNS, autenticación, EDR, etc.
+- Regla generada
     
-- **Herramientas y queries:** Código exacto ejecutado (KQL/VQL) incluyendo filtros del SIEM.
+- Lógica
     
-- **Mapeo MITRE ATT&CK:** Identificar las fuentes de datos (Data Sources) sugeridas por el framework para la técnica investigada.
-    
-
-### **IV. Evidencias y resultados**
-
-- **Eventos detectados:** IPs, dominios, procesos, usuarios y timestamps.
-    
-- **Indicadores de Compromiso (IoCs):** Hashes, mutexes o cadenas detectadas.
-    
-- **MITRE ATT&CK (TTPs):** Mapeo específico de la Táctica (ej. TA0003) y Técnica (ej. T1543.003).
-    
-- **Modelo Diamante (Capacidades):** Describir las herramientas o exploits (Capacidades) que el adversario utilizó para generar la evidencia encontrada.
-    
-
-### **V. Análisis y conclusiones**
-
-- **Interpretación:** Por qué los hallazgos son relevantes o benignos.
-    
-- **Validación:** Confirmación de la hipótesis (validada o descartada).
-    
-- **Impacto:** Alcance potencial del compromiso en la organización.
-    
-- **Correlación de Modelos:** Resumen de cómo el **Adversario** (Diamante) avanzó a través de la **Kill Chain** usando técnicas de **ATT&CK**.
-    
-
-### **VI. Recomendaciones y acciones**
-
-- **Contención y Mitigación:** Medidas inmediatas para detener la amenaza.
-    
-- **Actualización de Detección:** Conversión de la query de hunting en una regla de alerta permanente en el SIEM.
-    
-- **Lecciones aprendidas:** Análisis de brechas (Gap Analysis) para fortalecer futuras investigaciones.
+- Cobertura MITRE
     
 
 ---
 
-## 3. Matriz de Aplicación de Modelos
+## 4. Eliminación de Ruido
 
-|**Paso del Reporte**|**Modelo Diamante**|**Cyber Kill Chain**|**MITRE ATT&CK**|
-|---|---|---|---|
-|**Identificación**|Adversario / Víctima|-|-|
-|**Hipótesis**|-|Fase del Ataque|-|
-|**Fuentes de Datos**|Infraestructura|-|Data Sources|
-|**Evidencias**|Capacidades|-|Tácticas / Técnicas|
-|**Conclusiones**|Relación Adversario-Infra|Progreso del Intruso|Comportamiento (TTP)|
-|**Acciones**|Bloqueo de Infra|Romper la Cadena|Mitigación de Técnicas|
+Evitar:
+
+- Sobrecarga de frameworks
+    
+- Teoría innecesaria
+    
+- IoCs como base
+    
+- Uso forzado de modelos
+    
 
 ---
 
-## 4. Plantilla Maestra para Obsidian (Markdown Técnico)
+## 5. Uso Correcto de Frameworks
 
+### MITRE ATT&CK
 
-```markdown
-# [HUNT-ID] - [Título del Hallazgo]
-**Analista:** beathunterzero | **Entorno:** [Ej. MultiCloud/Fedora Lab]
-
-## 1. Identificación y Modelo Diamante
-- **Adversario:** [Nombre/Perfil] | **Infraestructura:** [IPs/Dominios]
-- **Víctima:** [Activo Crítico] | **Capacidad:** [Herramienta detectada]
-
-## 2. Hipótesis y Cyber Kill Chain
-- **Hipótesis:** [Suposición técnica]
-- **Fase de la Cadena:** [Ej. Comando y Control / Exfiltración]
-
-## 3. Fuentes de Datos y Queries
-- **Logs:** [Ej. Sysmon / DNS Logs]
-- **Query:** ```kql
-// Query técnica aquí
-
-## 4. Evidencias y MITRE ATT&CK
-
-- **Táctica/Técnica:** [Ej. TA0005 - T1071.004]
-    
-- **IoCs:** [Lista de artefactos confirmados]
-    
-
-## 5. Análisis y Conclusiones
-
-- **Interpretación:** [Análisis forense del hallazgo]
-    
-- **Hipótesis:** [Validada / Descartada]
-    
-
-## 6. Recomendaciones y Acciones
-
-- **Contención:** [Pasos inmediatos]
-    
-- **Ingeniería de Detección:** [Lógica para la nueva regla de alerta]
-    
-
-```
+✔ Obligatorio  
+✔ Define comportamiento  
+✔ Permite medir cobertura
 
 ---
 
-### Referencias
-* [MITRE ATT&CK Framework](https://attack.mitre.org/)
-* [Lockheed Martin Cyber Kill Chain](https://www.lockheedmartin.com/en-us/capabilities/cyber/cyber-kill-chain.html)
-* [Diamond Model for Intrusion Analysis](https://www.activeresponse.org/wp-content/uploads/2013/07/diamond_model.pdf)
+### Cyber Kill Chain
 
-### Documentación Relacionada
+✔ Contexto  
+✘ No base del hunt
 
-[[01 - Madurez y métricas de hunting]]
+---
+
+### Diamond Model
+
+✔ Pivoting  
+✘ No obligatorio
+
+---
+
+## 6. Plantilla Final (Obsidian)
+
+````markdown
+# [HUNT-ID] - [Título]
+
+**Analista:**  
+**Fecha:**  
+**Entorno:**  
+
+---
+
+## 1. Hipótesis
+[Hipótesis clara]
+
+---
+
+## 2. Telemetría
+- Fuentes:
+- Campos:
+
+---
+
+## 3. Query
+// Query
+
+---
+
+## 4. Evidencias
+- Procesos: 
+- Red:
+- Usuarios:
+
+---
+
+## 5. MITRE ATT&CK
+- Táctica:
+- Técnica:
+
+---
+
+## 6. Análisis
+- Interpretación:
+- Resultado:
+
+---
+
+## 7. Detección
+- Regla:
+- Lógica:
+- Cobertura:
+
+````
+---
+
+## 7. Relación con Métricas
+
+Se conecta directamente con:
+
+- MTTD  
+- MTTR  
+- Detection Yield  
+- Cobertura de TTPs  
+
+---
+
+## 8. Conclusión Técnica
+
+La documentación es parte del ciclo de detección.
+
+> Un hunt termina cuando se convierte en detección.
+
+---
+
+## Referencias Externas
+
+- https://attack.mitre.org/  
+- https://attack.mitre.org/resources/working-with-attack/  
+- https://www.sans.org/white-papers/37172/  
+- https://www.sans.org/white-papers/37702/  
+
+---
+
+## Documentación Relacionada
+
+[[01 - Madurez y métricas de hunting]]  
+[[03 - Conversión de hunts en casos de uso para SIEM y SOAR]]  
+[[10 - Convertir inteligencia en hipótesis de hunting]]  
+[[05 - Threat Hunting en SIEM]]  
+[[06 - Queries y hunting en EDR]]
+[[08 - Integración con CTI]]  

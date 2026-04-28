@@ -1,53 +1,112 @@
-## 1. Definición y Enfoque
+## 1. ¿Qué se busca?
 
-La cacería de **persistencia y ejecución** es la búsqueda proactiva de actividades maliciosas en computadoras, servidores y dispositivos de usuario (endpoints). Está enfocada específicamente en detectar dos fases críticas del ciclo de vida del atacante:
+La cacería de **persistencia y ejecución** se enfoca en detectar:
 
-- **Persistencia:** Cómo los atacantes se mantienen activos en el sistema y sobreviven a reinicios o cierres de sesión.
+- **Persistencia:** cómo el atacante mantiene acceso
     
-- **Ejecución:** Cómo lanzan su código dañino (payloads) interactuando con los recursos del sistema operativo.
+- **Ejecución:** cómo lanza código malicioso
     
 
-## 2. Matriz de Técnicas, Ejemplos y Huellas (Footprints)
+Ambas son fases críticas en endpoints.
 
-Basado en los vectores de ataque más comunes, a continuación se detallan las técnicas clave que todo Hunter debe monitorear, junto con sus ejemplos prácticos y los artefactos que dejan en la telemetría:
+---
 
-|**Técnica de Ataque**|**Ejemplo Práctico de Ejecución**|**Huellas (Footprints) para Detección**|
+## 2. Técnicas comunes y huellas
+
+|Técnica|Ejemplo|Detección|
 |---|---|---|
-|**Claves de Registro (Windows Registry Run Keys)**|`HKCU\Software\Microsoft\Windows\CurrentVersion\Run\Updater.exe`|Creación o edición de valores persistentes en las rutas de auto-arranque del registro. _(Sysmon Event ID 12, 13, 14)._|
-|**Tareas Programadas (Scheduled Tasks)**|`schtasks /create /sc minute /tn "OfficeUpdate" /tr "malware.exe"`|Eventos **ID 4698** (Tarea Creada) y **4702** (Tarea Actualizada) en los logs de seguridad nativos de Windows.|
-|**PowerShell con Código Codificado**|`powershell.exe -enc JABhAGwAdABlAHIA...` (Base64)|Eventos **ID 4104 (ScriptBlockLogging)** que revelan el código desofuscado antes de su ejecución en memoria.|
-|**Inyección de Procesos (Process Injection)**|Malware que inyecta una DLL maliciosa dentro de un proceso legítimo como `explorer.exe` o `svchost.exe`.|Relaciones anómalas de procesos padre/hijo, o accesos sospechosos a la memoria de otros procesos _(Sysmon Event ID 8, 10)._|
-|**Persistencia Fileless con WMI**|`wmic /namespace:\\root\subscription PATH __EventFilter`|Suscripciones WMI anómalas (_EventFilters_, _EventConsumers_) almacenadas directamente en el repositorio CIM.|
+|Run Keys|`HKCU\...\Run\Updater.exe`|Sysmon 12, 13, 14|
+|Scheduled Tasks|`schtasks /create ...`|Event 4698, 4702|
+|PowerShell codificado|`powershell.exe -enc ...`|Event 4104|
+|Process Injection|DLL en `explorer.exe`|Sysmon 8, 10|
+|WMI Persistence|`__EventFilter`|WMI anómalo|
 
-## 3. Estrategia de Caza en el Laboratorio
+---
 
-Para detectar estas técnicas en tu entorno de **Elastic Security** y **Velociraptor**, el enfoque debe ser el siguiente:
+## 3. Enfoque de hunting
 
-1. **Afinar el Baseline:** Los administradores de sistemas crean tareas programadas y modifican el registro constantemente. El Hunter debe filtrar el "ruido blanco" (acciones legítimas) para destacar las anomalías.
+### 3.1 Baseline
+
+- Identificar actividad normal
     
-2. **Monitoreo de LOLBins:** Las herramientas listadas (PowerShell, WMIC, Schtasks) son binarios legítimos del sistema (_Living off the Land_). La alerta no debe saltar porque se use PowerShell, sino por los **argumentos** pasados al ejecutable (como el flag `-enc` o `-WindowStyle Hidden`).
+- Filtrar tareas legítimas
     
-3. **Inspección en Memoria:** Para técnicas como la inyección de procesos o la persistencia WMI (Fileless), el escaneo tradicional de antivirus en disco es ineficaz. Se requiere telemetría profunda de EDR (Velociraptor) para analizar los hilos de ejecución y la memoria asignada.
+- Detectar desviaciones
     
 
 ---
 
-### Referencias Externas
+### 3.2 Uso de LOLBins
 
-- [MITRE ATT&CK: Persistence (TA0003)](https://attack.mitre.org/tactics/TA0003/)
+- PowerShell, WMIC, Schtasks son legítimos
     
-- [MITRE ATT&CK: Execution (TA0002)](https://attack.mitre.org/tactics/TA0002/)
+- El problema está en:
     
-- [Microsoft: Investigating PowerShell Attacks](https://www.google.com/search?q=https://learn.microsoft.com/en-us/defender-for-endpoint/investigate-powershell-command)
+    - argumentos
+        
+    - comportamiento
+        
+
+Ejemplos sospechosos:
+
+- `-enc`
+    
+- ejecución oculta
+    
+- descargas remotas
     
 
-### Documentación Relacionada
+---
 
-[[02 - Procesos sospechosos, inyección de código, LOLBAS]]
-[[03 - Técnicas de descubrimiento y movimiento lateral]]
-[[04 - Identificación de intentos de RDP, SMB y PASS-THE-HASH]]
-[[05 - Cazando anomalías en privilegios]]
-[[06 - Queries y hunting en EDR]]
-[[07 - Cómo formular búsquedas efectivas]]
-[[08 - Casos de ransomware, Cobalt Strike y keyloggers]]
+### 3.3 Análisis en memoria
+
+Necesario para:
+
+- Inyección de procesos
+    
+- Técnicas fileless
+    
+- Persistencia sin archivos
+    
+
+Requiere:
+
+- EDR (ej. Velociraptor)
+    
+- Telemetría avanzada
+    
+
+---
+
+## 4. Objetivo del hunting
+
+- Detectar persistencia temprana
+    
+- Identificar ejecución maliciosa
+    
+- Evitar reentrada del atacante
+    
+
+---
+
+## Referencias Externas
+
+- [https://attack.mitre.org/tactics/TA0003/](https://attack.mitre.org/tactics/TA0003/)
+    
+- [https://attack.mitre.org/tactics/TA0002/](https://attack.mitre.org/tactics/TA0002/)
+    
+- [https://learn.microsoft.com/en-us/defender-for-endpoint/investigate-powershell-command](https://learn.microsoft.com/en-us/defender-for-endpoint/investigate-powershell-command)
+    
+
+---
+
+## Documentación Relacionada
+
+[[02 - Procesos sospechosos, inyección de código, LOLBAS]]  
+[[03 - Técnicas de descubrimiento y movimiento lateral]]  
+[[04 - Identificación de intentos de RDP, SMB y PASS-THE-HASH]]  
+[[05 - Cazando anomalías en privilegios]]  
+[[06 - Queries y hunting en EDR]]  
+[[07 - Cómo formular búsquedas efectivas]]  
+[[08 - Casos de ransomware, Cobalt Strike y keyloggers]]  
 [[01 - Filosofía y estrategia del Threat Hunting]]
