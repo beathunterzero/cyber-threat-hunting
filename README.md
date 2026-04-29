@@ -1,53 +1,55 @@
 # 🎯 Cyber Threat Hunting
 
-Base de conocimiento estructurada y laboratorio de Threat Hunting enfocado en investigaciones basadas en hipótesis, desarrollo de detecciones y análisis de seguridad utilizando metodologías reales.
+Structured knowledge base and laboratory for Threat Hunting focused on hypothesis-driven investigations, detection engineering, and security analysis using real-world methodologies.
 
-Este repositorio está diseñado como una base de conocimiento profesional, no como un simple backup de notas, y está alineado con:
+> ⚠️ **Note:** The internal documentation of this repository is primarily written in **Spanish**.
+
+This repository is designed as a **professional knowledge base**, not as a simple notes backup, and is aligned with:
 
 - MITRE ATT&CK
     
 - Cyber Kill Chain
     
-- Threat Hunting basado en hipótesis
+- Hypothesis-driven Threat Hunting
     
 
 ---
 
-## 📌 Propósito
+## 📌 Purpose
 
-Este proyecto tiene como objetivo:
+This project aims to:
 
-- Documentar conceptos de Threat Hunting de forma estructurada
+- Document Threat Hunting concepts in a structured way
     
-- Desarrollar y registrar hipótesis de caza
+- Develop and register hunting hypotheses
     
-- Convertir investigaciones en lógica de detección
+- Convert investigations into detection logic
     
-- Construir una base de conocimiento reutilizable
+- Build a reusable knowledge base
     
-- Soportar laboratorios prácticos (Elastic Stack)
-    
-
----
-
-## 🧭 Metodología
-
-El contenido sigue un enfoque estructurado de Threat Hunting:
-
-1. Entender el contexto (MITRE ATT&CK, Kill Chain)
-    
-2. Formular hipótesis
-    
-3. Validar con telemetría y logs
-    
-4. Documentar hallazgos
-    
-5. Convertir en detecciones o casos de uso
+- Support practical lab environments (Elastic Stack)
     
 
 ---
 
-## 🗂️ Estructura del repositorio
+## 🧭 Methodology
+
+The content follows a structured Threat Hunting workflow:
+
+1. Understand the context (MITRE ATT&CK, Kill Chain)
+    
+2. Formulate hypotheses
+    
+3. Validate using telemetry and logs
+    
+4. Document findings
+    
+5. Convert results into detections or use cases
+    
+
+---
+
+## 🗂️ Repository Structure
 
 ```text
 cyber-threat-hunting/  
@@ -72,41 +74,41 @@ cyber-threat-hunting/
 
 ---
 
-## 📖 Base de conocimiento (docs)
+## 📖 Knowledge Base (docs)
 
-Incluye:
+Includes:
 
-- Metodologías de hunting (IoC, hipótesis, analítica)
+- Hunting methodologies (IoC, hypothesis-driven, analytics)
     
-- MITRE ATT&CK y Cyber Kill Chain
+- MITRE ATT&CK and Cyber Kill Chain
     
-- Fuentes de datos y telemetría
+- Data sources and telemetry
     
-- Estrategias de detección
+- Detection strategies
     
-- Comparación EDR vs SIEM
+- EDR vs SIEM comparison
     
-- Datasets de ataque simulado
-    
-
----
-
-## 🎯 Threat Hunting basado en hipótesis
-
-La sección `hipotesis` contiene investigaciones estructuradas orientadas a:
-
-- Definir problemas de detección
-    
-- Validar comportamientos de atacante
-    
-- Generar conocimiento accionable
+- Simulated attack datasets
     
 
 ---
 
-## 🧪 Laboratorios
+## 🎯 Hypothesis-Driven Threat Hunting
 
-Incluye un entorno práctico basado en:
+The `hipotesis` section contains structured investigations focused on:
+
+- Defining detection problems
+    
+- Validating attacker behavior
+    
+- Generating actionable knowledge
+    
+
+---
+
+## 🧪 Labs
+
+Includes practical environments based on:
 
 - Elastic Stack (Elasticsearch, Kibana, Filebeat)
     
@@ -114,38 +116,38 @@ Incluye un entorno práctico basado en:
     
 - Wireshark
     
-- Ingesta de logs
+- Log ingestion pipelines
     
-- Creación de reglas de detección
+- Detection rule creation
     
-- Flujos de Threat Hunting
-    
-
----
-
-## 🧱 Posicionamiento
-
-Este repositorio representa:
-
-- Una base de conocimiento de Threat Hunting
-    
-- Fundamentos de Detection Engineering
-    
-- Un proyecto de portafolio orientado a SOC
+- Threat Hunting workflows
     
 
 ---
 
-## 📍 Alcance
+## 🧱 Positioning
 
-- Uso educativo y desarrollo profesional
+This repository represents:
+
+- A Threat Hunting knowledge base
     
-- No contiene datos sensibles ni de producción
+- Detection Engineering fundamentals
+    
+- A SOC-oriented portfolio project
     
 
 ---
 
-## 👤 Autor
+## 📍 Scope
+
+- Educational and professional development use
+    
+- Does not contain sensitive or production data
+    
+
+---
+
+## 👤 Author
 
 **beathunterzero**  
 Cyber Threat Hunting & Security
