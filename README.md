@@ -1,4 +1,4 @@
-# Cyber Threat Hunting
+# 🎯 Cyber Threat Hunting
 
 Base de conocimiento estructurada y laboratorio de Threat Hunting enfocado en investigaciones basadas en hipótesis, desarrollo de detecciones y análisis de seguridad utilizando metodologías reales.
 
@@ -13,7 +13,7 @@ Este repositorio está diseñado como una base de conocimiento profesional, no c
 
 ---
 
-## Propósito
+## 📌 Propósito
 
 Este proyecto tiene como objetivo:
 
@@ -30,7 +30,7 @@ Este proyecto tiene como objetivo:
 
 ---
 
-## Metodología
+## 🧭 Metodología
 
 El contenido sigue un enfoque estructurado de Threat Hunting:
 
@@ -47,33 +47,32 @@ El contenido sigue un enfoque estructurado de Threat Hunting:
 
 ---
 
-## Estructura del repositorio
+## 🗂️ Estructura del repositorio
 
 ```text
 cyber-threat-hunting/  
 │  
-├── docs/ # Base de conocimiento (desde fundamentos hasta nivel avanzado) 
-│ ├── 01_fundamentos/ # Conceptos base, marcos y estrategia 
-│ ├── 02_cth-endpoints/ # Técnicas de hunting en endpoints  
-│ ├── 03_cth-red-siem/ # Hunting en red y SIEM 
-│ ├── 04_madurez/ # Métricas, procesos y evolución 
-│ └── 05_glosario/ # Terminología 
+├── docs/  
+│   ├── 01_fundamentos/  
+│   ├── 02_cth-endpoints/  
+│   ├── 03_cth-red-siem/  
+│   ├── 04_madurez/  
+│   └── 05_glosario/  
 │  
-├── hipotesis/ # Investigaciones basadas en hipótesis 
-│ ├── endpoint/  
-│ ├── red/  
-│ └── siem/  
+├── hipotesis/  
+│   ├── endpoint/  
+│   ├── red/  
+│   └── siem/  
 │  
-├── labs/ # Implementaciones prácticas 
-│ └── elastic-security-lab/
-│ └── velociraptor-security-lab/
-│ └── wireshark-security-lab/
+├── labs/  
+│   ├── elastic-security-lab/  
+│   ├── velociraptor-security-lab/  
+│   └── wireshark-security-lab/  
 ```
-
 
 ---
 
-## Base de conocimiento (docs)
+## 📖 Base de conocimiento (docs)
 
 Incluye:
 
@@ -92,9 +91,9 @@ Incluye:
 
 ---
 
-## Threat Hunting basado en hipótesis
+## 🎯 Threat Hunting basado en hipótesis
 
-La sección hipotesis contiene investigaciones estructuradas orientadas a:
+La sección `hipotesis` contiene investigaciones estructuradas orientadas a:
 
 - Definir problemas de detección
     
@@ -105,7 +104,7 @@ La sección hipotesis contiene investigaciones estructuradas orientadas a:
 
 ---
 
-## Laboratorios
+## 🧪 Laboratorios
 
 Incluye un entorno práctico basado en:
 
@@ -124,7 +123,7 @@ Incluye un entorno práctico basado en:
 
 ---
 
-## Posicionamiento
+## 🧱 Posicionamiento
 
 Este repositorio representa:
 
@@ -137,7 +136,7 @@ Este repositorio representa:
 
 ---
 
-## Alcance
+## 📍 Alcance
 
 - Uso educativo y desarrollo profesional
     
@@ -146,8 +145,11 @@ Este repositorio representa:
 
 ---
 
-## Autor
+## 👤 Autor
 
-beathunterzero
+**beathunterzero**  
+Cyber Threat Hunting & Security
+
+---
 
 [[01 - Filosofía y estrategia del Threat Hunting]]
